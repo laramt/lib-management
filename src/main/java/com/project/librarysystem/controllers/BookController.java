@@ -39,4 +39,16 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body(book);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteBookById(@PathVariable UUID id){
+        Optional<Book> book = bookService.findById(id);
+
+        if(!book.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book does not exists");
+        }
+
+        bookService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Book deleted");
+    }
+
 }
