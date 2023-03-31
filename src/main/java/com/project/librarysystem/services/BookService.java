@@ -32,4 +32,15 @@ public class BookService{
         bookRepository.deleteById(id);
     }
 
+    public void update (UUID id, Book book){
+        Book bk = bookRepository.getById(id);
+        bk.setTitle(book.getTitle());
+        bk.setAuthor(book.getAuthor());
+        bk.setIsbn(book.getIsbn());
+        bk.setPublisher(book.getPublisher());
+        bk.setYearPublished(book.getYearPublished());
+
+        bookRepository.save(bk);
+    }
+
 }

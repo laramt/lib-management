@@ -51,4 +51,16 @@ public class BookController {
         return ResponseEntity.status(HttpStatus.OK).body("Book deleted");
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateBook(@PathVariable UUID id, @RequestBody Book book){
+        Optional<Book> bk = bookService.findById(id);
+
+        if(!bk.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book does not exists");
+        }
+
+        bookService.update(id, book);
+        return ResponseEntity.status(HttpStatus.OK).body(book);
+    }
+
 }
