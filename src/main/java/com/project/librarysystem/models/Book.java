@@ -1,5 +1,6 @@
 package com.project.librarysystem.models;
 
+import com.project.librarysystem.enums.BookStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -15,8 +16,10 @@ public class Book {
     private UUID id;
     private String title;
     private String author;
+    @Column(unique = true)
     private String isbn;
     private String publisher;
     private int yearPublished;
+    private BookStatus status;
 
 }
