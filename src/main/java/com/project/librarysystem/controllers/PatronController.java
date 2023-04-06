@@ -21,6 +21,12 @@ public class PatronController {
     @Autowired
     PatronService patronService;
 
+    @PostMapping("/register")
+    public ResponseEntity<Patron> registerNewPatron(@RequestBody Patron patron){
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(patronService.registerNewPatron(patron));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Patron>> getAllPatrons(){
         List<Patron> list = patronService.findAll();
