@@ -22,4 +22,8 @@ public class PatronService {
         return patronRepository.findAll();
     }
 
+    public Optional<Patron> findById(UUID id){
+        return patronRepository.findById(id);
+    }
+
 }

@@ -28,4 +28,15 @@ public class PatronController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<Object> getPatronById(@PathVariable("id") UUID id){
+        Optional<Patron> patron = patronService.findById(id);
+        if (!patron.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron does not exist");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(patron);
+
+    }
+
 }
