@@ -39,6 +39,7 @@ public class BookService{
         bk.setIsbn(book.getIsbn());
         bk.setPublisher(book.getPublisher());
         bk.setYearPublished(book.getYearPublished());
+        bk.setStatus(book.getStatus());
 
         bookRepository.save(bk);
     }
