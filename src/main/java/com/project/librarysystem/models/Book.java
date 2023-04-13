@@ -20,6 +20,7 @@ public class Book {
     private String isbn;
     private String publisher;
     private int yearPublished;
+    @Enumerated(EnumType.STRING)
     private BookStatus status;
 
 }
