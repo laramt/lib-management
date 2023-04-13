@@ -9,11 +9,7 @@ import com.project.librarysystem.repositories.HoldRepository;
 import com.project.librarysystem.repositories.PatronRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,9 +24,38 @@ import java.util.UUID;
 public class HoldService {
     @Autowired
     HoldRepository holdRepository;
+    @Autowired
+    BookRepository bookRepository;
+    @Autowired
+    PatronRepository patronRepository;
+    static final int loanDays = 14;
+
+    public Hold checkout(UUID patronId, UUID bookId){
+
+        Optional<Book> obj = bookRepository.findById(bookId);
+        Book book = obj.orElseThrow(() -> new RuntimeException("Book not found"));
+
+        if(book.getStatus().equals(BookStatus.AVAILABLE)) {
+            book.setStatus(BookStatus.CHECKED_OUT);
+       }
+        else {
+            throw new RuntimeException("Book is not available");
+        }
+
+        Optional<Patron> pt = patronRepository.findById(patronId);
+        Patron patron = pt.orElseThrow(() -> new RuntimeException("Patron not found"));
+
+        Hold hold = Hold.builder()
+                .book(book)
+                .patron(patron)
+                .checkout(LocalDateTime.now(ZoneId.of("UTC")))
+                .dueDate(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(loanDays))
+                .build();
+
+        return holdRepository.save(hold);
+    }
 
     public List<Hold> findAll() {
         return holdRepository.findAll();
-
     }
 }

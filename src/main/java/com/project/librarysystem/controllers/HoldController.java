@@ -18,6 +18,12 @@ public class HoldController {
     @Autowired
     HoldService holdService;
 
+    @PostMapping("/{patronId}/{bookId}")
+    public ResponseEntity<Object> checkout(@PathVariable(value = "patronId") UUID patronId,
+                                           @PathVariable(value = "bookId") UUID bookId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(holdService.checkout(patronId, bookId));
+    }
+
     @GetMapping("/all")
     public ResponseEntity<List<Hold>> getAllHold(){
         List<Hold> list = holdService.findAll();
