@@ -7,15 +7,13 @@ import com.project.librarysystem.models.Patron;
 import com.project.librarysystem.repositories.BookRepository;
 import com.project.librarysystem.repositories.HoldRepository;
 import com.project.librarysystem.repositories.PatronRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -28,7 +26,10 @@ public class HoldService {
     BookRepository bookRepository;
     @Autowired
     PatronRepository patronRepository;
-    static final int loanDays = 14;
+
+   private static final int LOAN_DAYS = 14;
+
+   private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
     public Hold checkout(UUID patronId, UUID bookId){
 
@@ -48,14 +49,45 @@ public class HoldService {
         Hold hold = Hold.builder()
                 .book(book)
                 .patron(patron)
-                .checkout(LocalDateTime.now(ZoneId.of("UTC")))
-                .dueDate(Instant.now().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(loanDays))
+                .checkout(LocalDate.now(ZoneId.of("UTC")))
+                .dueDate(LocalDate.now(ZoneId.of("UTC")).plusDays(LOAN_DAYS))
                 .build();
+
+        return holdRepository.save(hold);
+    }
+
+    public Hold devolution(UUID id){
+
+        Optional<Hold> hd = findById(id);
+        Hold hold = hd.orElseThrow(() -> new RuntimeException("Hold not found"));
+
+        LocalDate checkin = LocalDate.now();
+        BigDecimal fee;
+
+        if (checkin.isAfter(hold.getDueDate())){
+
+            fee = (new BigDecimal(ChronoUnit.DAYS
+                    .between(hold.getCheckout(), checkin))
+                    .subtract(new BigDecimal(LOAN_DAYS)))
+                    .multiply(DAILY_FEE);
+        }
+        else {
+            fee = new BigDecimal(0.00);
+        }
+
+        hold.setCheckIn(checkin);
+        hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
+        hold.getBook().setStatus(BookStatus.AVAILABLE);
+        hold.setReturned(true);
 
         return holdRepository.save(hold);
     }
 
     public List<Hold> findAll() {
         return holdRepository.findAll();
+    }
+
+    public Optional<Hold> findById(UUID id) {
+        return holdRepository.findById(id);
     }
 }
