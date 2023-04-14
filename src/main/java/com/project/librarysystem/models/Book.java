@@ -10,17 +10,17 @@ import java.util.UUID;
 @Entity
 @Table(name = "BOOK_TB")
 public class Book {
-
     @Id
     @GeneratedValue(strategy =  GenerationType.AUTO)
     private UUID id;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String author;
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String isbn;
     private String publisher;
     private int yearPublished;
-    @Enumerated(EnumType.STRING)
     private BookStatus status;
 
 }
