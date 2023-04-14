@@ -1,20 +1,22 @@
 package com.project.librarysystem.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "HOLD_TB")
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hold {
 
     @Id
@@ -30,10 +32,11 @@ public class Hold {
             joinColumns = @JoinColumn(name = "hold_id"),
             inverseJoinColumns = @JoinColumn(name = "patron_id"))
     private Patron patron;
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime checkout;
-    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime checkIn;
+    @JsonFormat(pattern="dd-MM-yyyy")
+    private LocalDate checkout;
+    @JsonFormat(pattern="dd-MM-yyyy")
+    private LocalDate checkIn;
+    @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate dueDate;
     private BigDecimal lateFee;
     private boolean returned;
