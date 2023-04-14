@@ -46,4 +46,14 @@ public class HoldController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getHoldById(@PathVariable UUID id){
+        Optional<Hold> hold = holdService.findById(id);
+        if(!hold.isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" It does not exists");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(hold);
+    }
+
 }
