@@ -1,8 +1,9 @@
 package com.project.librarysystem.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ public class Patron {
     private String name;
     private String email;
     private String phoneNumber;
+    @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate birthDate;
+
 
 }

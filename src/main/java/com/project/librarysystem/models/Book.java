@@ -1,9 +1,9 @@
 package com.project.librarysystem.models;
 
 import com.project.librarysystem.enums.BookStatus;
+import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.util.UUID;
 
 @Data
