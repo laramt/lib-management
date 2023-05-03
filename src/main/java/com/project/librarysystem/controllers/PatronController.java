@@ -35,7 +35,7 @@ public class PatronController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Object> getPatronById(@PathVariable("id") UUID id){
+    public ResponseEntity<Object> getPatronById(@PathVariable("id") Long id){
         Optional<Patron> patron = patronService.findById(id);
         if (!patron.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron does not exist");

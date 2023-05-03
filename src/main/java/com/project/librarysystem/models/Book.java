@@ -11,8 +11,8 @@ import java.util.UUID;
 @Table(name = "BOOK_TB")
 public class Book {
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)

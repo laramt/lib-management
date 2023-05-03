@@ -20,17 +20,15 @@ public class HoldController {
 
     @Autowired
     HoldService holdService;
-    @Autowired
-    PatronService patronService;
 
     @PostMapping("/{patronId}/{bookId}")
-    public ResponseEntity<Object> checkout(@PathVariable(value = "patronId") UUID patronId,
-                                           @PathVariable(value = "bookId") UUID bookId){
+    public ResponseEntity<Object> checkout(@PathVariable(value = "patronId") Long patronId,
+                                           @PathVariable(value = "bookId") Long bookId){
         return ResponseEntity.status(HttpStatus.CREATED).body(holdService.checkout(patronId, bookId));
     }
 
     @PutMapping("devolution/{id}")
-    public ResponseEntity<Object> devolution(@PathVariable(value = "id") UUID id){
+    public ResponseEntity<Object> devolution(@PathVariable(value = "id") Long id){
 
         Optional<Hold> hd = holdService.findById(id);
         if (!hd.isPresent()){
@@ -47,7 +45,7 @@ public class HoldController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getHoldById(@PathVariable UUID id){
+    public ResponseEntity<Object> getHoldById(@PathVariable Long id){
         Optional<Hold> hold = holdService.findById(id);
         if(!hold.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" It does not exists");

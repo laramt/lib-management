@@ -34,7 +34,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getBookById(@PathVariable UUID id){
+    public ResponseEntity<Object> getBookById(@PathVariable Long id){
         Optional<Book> book = bookService.findById(id);
         if(!book.isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book does not exists");
@@ -44,7 +44,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteBookById(@PathVariable UUID id){
+    public ResponseEntity<Object> deleteBookById(@PathVariable Long id){
         Optional<Book> book = bookService.findById(id);
 
         if(!book.isPresent()){
@@ -56,7 +56,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateBook(@PathVariable UUID id, @RequestBody Book book){
+    public ResponseEntity<Object> updateBook(@PathVariable Long id, @RequestBody Book book){
         Optional<Book> bk = bookService.findById(id);
 
         if(!bk.isPresent()){

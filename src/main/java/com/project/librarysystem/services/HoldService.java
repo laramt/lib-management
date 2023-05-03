@@ -31,7 +31,7 @@ public class HoldService {
 
    private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
-    public Hold checkout(UUID patronId, UUID bookId){
+    public Hold checkout(Long patronId, Long bookId){
 
         Optional<Book> obj = bookRepository.findById(bookId);
         Book book = obj.orElseThrow(() -> new RuntimeException("Book not found"));
@@ -56,7 +56,7 @@ public class HoldService {
         return holdRepository.save(hold);
     }
 
-    public Hold devolution(UUID id){
+    public Hold devolution(Long id){
 
         Optional<Hold> hd = findById(id);
         Hold hold = hd.orElseThrow(() -> new RuntimeException("Hold not found"));
@@ -87,7 +87,7 @@ public class HoldService {
         return holdRepository.findAll();
     }
 
-    public Optional<Hold> findById(UUID id) {
+    public Optional<Hold> findById(Long id) {
         return holdRepository.findById(id);
     }
 }

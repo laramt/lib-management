@@ -24,15 +24,15 @@ public class BookService{
         return bookRepository.findAll();
     }
 
-    public Optional<Book> findById (UUID id){
+    public Optional<Book> findById (Long id){
         return bookRepository.findById(id);
     }
 
-    public void delete (UUID id){
+    public void delete (Long id){
         bookRepository.deleteById(id);
     }
 
-    public void update (UUID id, Book book){
+    public void update (Long id, Book book){
         Book bk = bookRepository.getById(id);
         bk.setTitle(book.getTitle());
         bk.setAuthor(book.getAuthor());

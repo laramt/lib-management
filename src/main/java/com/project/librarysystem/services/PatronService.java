@@ -63,7 +63,7 @@ public class PatronService {
         return patronRepository.findAll();
     }
 
-    public Optional<Patron> findById(UUID id){
+    public Optional<Patron> findById(Long id){
         return patronRepository.findById(id);
     }
 

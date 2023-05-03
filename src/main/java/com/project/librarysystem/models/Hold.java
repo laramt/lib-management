@@ -20,8 +20,8 @@ import java.util.UUID;
 public class Hold {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @ManyToOne
     @JoinTable(name = "HOLD_BOOK",
             joinColumns = @JoinColumn(name = "hold_id"),
