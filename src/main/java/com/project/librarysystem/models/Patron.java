@@ -1,6 +1,7 @@
 package com.project.librarysystem.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class Patron {
     private String phoneNumber;
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate birthDate;
+    @JsonIgnore
     @OneToMany(mappedBy = "patron")
     private Set<Hold> holds = new HashSet<>();
 

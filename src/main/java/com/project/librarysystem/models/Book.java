@@ -1,6 +1,7 @@
 package com.project.librarysystem.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.librarysystem.enums.BookStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Book {
     private int yearPublished;
     @Enumerated(EnumType.STRING)
     private BookStatus status;
+    @JsonIgnore
     @OneToMany(mappedBy = "book")
     private Set<Hold> holds = new HashSet<>();
 
