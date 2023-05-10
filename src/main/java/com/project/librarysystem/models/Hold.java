@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -23,14 +22,10 @@ public class Hold {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinTable(name = "HOLD_BOOK",
-            joinColumns = @JoinColumn(name = "hold_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id"))
+    @JoinColumn(name = "book_id")
     private Book book;
-    @OneToOne
-    @JoinTable(name = "HOLD_PATRON",
-            joinColumns = @JoinColumn(name = "hold_id"),
-            inverseJoinColumns = @JoinColumn(name = "patron_id"))
+    @ManyToOne
+    @JoinColumn(name = "patron_id")
     private Patron patron;
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate checkout;

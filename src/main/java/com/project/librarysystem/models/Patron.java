@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Table(name = "PATRON_TB")
@@ -21,6 +22,7 @@ public class Patron {
     private String phoneNumber;
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate birthDate;
-
+    @OneToMany(mappedBy = "patron")
+    private Set<Hold> holds = new HashSet<>();
 
 }
