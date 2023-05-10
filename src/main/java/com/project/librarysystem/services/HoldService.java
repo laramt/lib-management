@@ -64,12 +64,10 @@ public class HoldService {
         LocalDate checkin = LocalDate.now();
         BigDecimal fee;
 
-        if (checkin.isAfter(hold.getDueDate())){
+        BigDecimal lateDays = BigDecimal.valueOf(ChronoUnit.DAYS.between(hold.getDueDate(), checkin));
 
-            fee = (new BigDecimal(ChronoUnit.DAYS
-                    .between(hold.getCheckout(), checkin))
-                    .subtract(new BigDecimal(LOAN_DAYS)))
-                    .multiply(DAILY_FEE);
+        if (lateDays.compareTo(BigDecimal.ZERO) > 0) {
+            fee = lateDays.multiply(DAILY_FEE);
         }
         else {
             fee = new BigDecimal(0.00);
