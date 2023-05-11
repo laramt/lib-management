@@ -1,6 +1,8 @@
 package com.project.librarysystem.services;
 
 import com.project.librarysystem.enums.BookStatus;
+import com.project.librarysystem.exceptions.ResourceNotAvailableException;
+import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.models.Book;
 import com.project.librarysystem.models.Hold;
 import com.project.librarysystem.models.Patron;
@@ -35,18 +37,18 @@ public class HoldService {
    public Hold checkout(Long patronId, Long bookId){
 
         Optional<Book> obj = bookRepository.findById(bookId);
-        Book book = obj.orElseThrow(() -> new RuntimeException("Book not found"));
+        Book book = obj.orElseThrow(() -> new ResourceNotFoundException("Book with" + bookId + " not found"));
 
         if(bookRepository.isBookAvailable(bookId)) {
             book.setStatus(BookStatus.CHECKED_OUT);
             bookRepository.save(book);
        }
         else {
-            throw new RuntimeException("Book is not available");
+            throw new ResourceNotAvailableException("Book is not available");
         }
 
         Optional<Patron> pt = patronRepository.findById(patronId);
-        Patron patron = pt.orElseThrow(() -> new RuntimeException("Patron not found"));
+        Patron patron = pt.orElseThrow(() -> new ResourceNotFoundException("Patron with" + patronId + "not found"));
 
         Hold hold = Hold.builder()
                 .book(book)
@@ -60,9 +62,7 @@ public class HoldService {
     @Transactional
     public Hold devolution(Long id){
 
-        Optional<Hold> hd = findById(id);
-        Hold hold = hd.orElseThrow(() -> new RuntimeException("Hold not found"));
-
+        Hold hold = findById(id);
         LocalDate checkin = LocalDate.now();
         BigDecimal fee;
 
@@ -89,7 +89,9 @@ public class HoldService {
         return holdRepository.findAll();
     }
 
-    public Optional<Hold> findById(Long id) {
-        return holdRepository.findById(id);
+    public Hold findById(Long id) {
+        Optional<Hold> hd = holdRepository.findById(id);
+        Hold hold = hd.orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
+        return hold;
     }
 }

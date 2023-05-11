@@ -1,5 +1,7 @@
 package com.project.librarysystem.services;
 
+import com.project.librarysystem.exceptions.InvalidInputException;
+import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.models.Patron;
 import com.project.librarysystem.repositories.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,14 +33,11 @@ public class PatronService {
 
     public Patron findById(Long id){
         Optional<Patron> pt = patronRepository.findById(id);
-        Patron patron = pt.orElseThrow(() -> new RuntimeException("Id" + id + "does not exists"));
+        Patron patron = pt.orElseThrow(() -> new ResourceNotFoundException("Patron with id " + id + " not found."));
         return patron;
     }
 
-    public void delete (Long id){
-        patronRepository.deleteById(id);
-    }
-
+    @Transactional
     public Patron update(Long id, Patron patron){
         Patron pt = findById(id);
         validatePatronData(patron.getEmail(), patron.getPhoneNumber(), patron.getBirthDate());
@@ -54,33 +53,33 @@ public class PatronService {
     private void validatePatronData(String email, String phoneNumber, LocalDate birthDate){
 
         if (email == null || email.isEmpty()){
-            throw new RuntimeException("Email cannot be null or empty.");
+            throw new InvalidInputException("Email cannot be null or empty.");
         }
 
         Pattern patternEmail = Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
         Matcher matcherEmail = patternEmail.matcher(email);
         if (!matcherEmail.matches()) {
-            throw new RuntimeException("Invalid email.");
+            throw new InvalidInputException("Invalid email.");
         }
 
         if (phoneNumber == null || phoneNumber.isEmpty()){
-            throw new RuntimeException("Phone number cannot be null or empty");
+            throw new InvalidInputException("Phone number cannot be null or empty");
         }
 
         Pattern patternPhone = Pattern.compile("^\\d{13}$");
         Matcher matcherPhone = patternPhone.matcher(phoneNumber);
         if (!matcherPhone.matches()) {
-            throw new RuntimeException("Invalid phone number.");
+            throw new InvalidInputException("Invalid phone number.");
         }
 
         if (birthDate == null || birthDate.toString().isEmpty()){
-            throw new RuntimeException("Birthdate cannot be null or empty");
+            throw new InvalidInputException("Birthdate cannot be null or empty");
         }
 
         LocalDate today = LocalDate.now();
         LocalDate minimumAgeDate = today.minusYears(MINIMUM_AGE);
         if (birthDate.isAfter(minimumAgeDate)){
-            throw new RuntimeException("Patron must be at least " + MINIMUM_AGE + " years old.");
+            throw new InvalidInputException("Patron must be at least " + MINIMUM_AGE + " years old.");
         }
 
     }

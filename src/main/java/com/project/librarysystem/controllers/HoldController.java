@@ -1,10 +1,7 @@
 package com.project.librarysystem.controllers;
 
-import com.project.librarysystem.models.Book;
 import com.project.librarysystem.models.Hold;
-import com.project.librarysystem.models.Patron;
 import com.project.librarysystem.services.HoldService;
-import com.project.librarysystem.services.PatronService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/hold")
@@ -24,15 +20,15 @@ public class HoldController {
     @PostMapping("/{patronId}/{bookId}")
     public ResponseEntity<Object> checkout(@PathVariable(value = "patronId") Long patronId,
                                            @PathVariable(value = "bookId") Long bookId){
-        return ResponseEntity.status(HttpStatus.CREATED).body(holdService.checkout(patronId, bookId));
+        Hold hold = holdService.checkout(patronId, bookId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(hold);
     }
 
-    @PutMapping("devolution/{id}")
+    @PutMapping("/devolution/{id}")
     public ResponseEntity<Object> devolution(@PathVariable(value = "id") Long id){
-
-        Optional<Hold> hd = holdService.findById(id);
-        if (!hd.isPresent()){
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hold does not exist");
+        Hold hd = holdService.findById(id);
+        if (!Optional.of(hd).isPresent()){
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hold with id " + id + " not found.");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(holdService.devolution(id));
@@ -46,9 +42,9 @@ public class HoldController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getHoldById(@PathVariable Long id){
-        Optional<Hold> hold = holdService.findById(id);
-        if(!hold.isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(" It does not exists");
+        Hold hold = holdService.findById(id);
+        if (!Optional.of(hold).isPresent()){
+            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Hold with id " + id + " not found.");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(hold);

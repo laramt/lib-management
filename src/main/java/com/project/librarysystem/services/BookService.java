@@ -1,5 +1,6 @@
 package com.project.librarysystem.services;
 
+import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.models.Book;
 import com.project.librarysystem.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class BookService{
 
     public Book findById (Long id){
         Optional<Book> pt = bookRepository.findById(id);
-        Book book = pt.orElseThrow(() -> new RuntimeException("Id" + id + "does not exists"));
+        Book book = pt.orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
         return book;
 
     }
@@ -42,7 +43,6 @@ public class BookService{
         bk.setIsbn(book.getIsbn());
         bk.setPublisher(book.getPublisher());
         bk.setYearPublished(book.getYearPublished());
-        bk.setStatus(book.getStatus());
 
         bookRepository.save(bk);
         return bk;

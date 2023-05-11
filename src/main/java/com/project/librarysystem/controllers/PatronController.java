@@ -7,12 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 @RestController
 @RequestMapping("/patron")
@@ -23,7 +20,6 @@ public class PatronController {
 
     @PostMapping("/register")
     public ResponseEntity<Patron> registerNewPatron(@RequestBody Patron patron){
-
         return ResponseEntity.status(HttpStatus.CREATED).body(patronService.registerNewPatron(patron));
     }
 
@@ -34,14 +30,26 @@ public class PatronController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Object> getPatronById(@PathVariable("id") Long id){
-        Optional<Patron> patron = patronService.findById(id);
-        if (!patron.isPresent()){
+        Patron patron = patronService.findById(id);
+        if (!Optional.of(patron).isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron does not exist");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(patron);
+
+    }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> update(@PathVariable("id") Long id, @RequestBody Patron patron){
+        Patron pt = patronService.findById(id);
+        if (!Optional.of(pt).isPresent()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron does not exist");
+        }
+        Patron updatedPatron = patronService.update(id, patron);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedPatron);
 
     }
 
