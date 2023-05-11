@@ -5,10 +5,8 @@ import com.project.librarysystem.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class BookService{
@@ -24,16 +22,21 @@ public class BookService{
         return bookRepository.findAll();
     }
 
-    public Optional<Book> findById (Long id){
-        return bookRepository.findById(id);
+    public Book findById (Long id){
+        Optional<Book> pt = bookRepository.findById(id);
+        Book book = pt.orElseThrow(() -> new RuntimeException("Id" + id + "does not exists"));
+        return book;
+
     }
 
     public void delete (Long id){
+        findById(id);
         bookRepository.deleteById(id);
     }
 
-    public void update (Long id, Book book){
-        Book bk = bookRepository.getById(id);
+    public Book update (Long id, Book book){
+        Book bk = findById(id);
+
         bk.setTitle(book.getTitle());
         bk.setAuthor(book.getAuthor());
         bk.setIsbn(book.getIsbn());
@@ -42,6 +45,7 @@ public class BookService{
         bk.setStatus(book.getStatus());
 
         bookRepository.save(bk);
+        return bk;
     }
 
 }
