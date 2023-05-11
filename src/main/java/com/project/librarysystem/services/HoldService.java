@@ -9,6 +9,7 @@ import com.project.librarysystem.repositories.HoldRepository;
 import com.project.librarysystem.repositories.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,13 +32,15 @@ public class HoldService {
 
    private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
-    public Hold checkout(Long patronId, Long bookId){
+   @Transactional
+   public Hold checkout(Long patronId, Long bookId){
 
         Optional<Book> obj = bookRepository.findById(bookId);
         Book book = obj.orElseThrow(() -> new RuntimeException("Book not found"));
 
         if(book.getStatus().equals(BookStatus.AVAILABLE)) {
             book.setStatus(BookStatus.CHECKED_OUT);
+            bookRepository.save(book);
        }
         else {
             throw new RuntimeException("Book is not available");
@@ -49,7 +52,6 @@ public class HoldService {
         Hold hold = Hold.builder()
                 .book(book)
                 .patron(patron)
-                .checkout(LocalDate.now(ZoneId.of("UTC")))
                 .dueDate(LocalDate.now(ZoneId.of("UTC")).plusDays(LOAN_DAYS))
                 .build();
 

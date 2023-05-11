@@ -36,4 +36,8 @@ public class Hold {
     private BigDecimal lateFee;
     private boolean returned;
 
+    @PrePersist
+    protected void onCreate() {
+        checkout = LocalDate.now();
+    }
 }
