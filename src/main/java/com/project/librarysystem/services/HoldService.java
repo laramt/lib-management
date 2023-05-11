@@ -17,7 +17,6 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class HoldService {
@@ -38,7 +37,7 @@ public class HoldService {
         Optional<Book> obj = bookRepository.findById(bookId);
         Book book = obj.orElseThrow(() -> new RuntimeException("Book not found"));
 
-        if(book.getStatus().equals(BookStatus.AVAILABLE)) {
+        if(bookRepository.isBookAvailable(bookId)) {
             book.setStatus(BookStatus.CHECKED_OUT);
             bookRepository.save(book);
        }
@@ -58,6 +57,7 @@ public class HoldService {
         return holdRepository.save(hold);
     }
 
+    @Transactional
     public Hold devolution(Long id){
 
         Optional<Hold> hd = findById(id);
@@ -77,7 +77,9 @@ public class HoldService {
 
         hold.setCheckIn(checkin);
         hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
-        hold.getBook().setStatus(BookStatus.AVAILABLE);
+        Book book = hold.getBook();
+        book.setStatus(BookStatus.AVAILABLE);
+        bookRepository.save(book);
         hold.setReturned(true);
 
         return holdRepository.save(hold);
