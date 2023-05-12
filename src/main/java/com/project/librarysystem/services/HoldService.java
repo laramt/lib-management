@@ -3,10 +3,10 @@ package com.project.librarysystem.services;
 import com.project.librarysystem.enums.BookStatus;
 import com.project.librarysystem.exceptions.ResourceNotAvailableException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
-import com.project.librarysystem.models.Book;
+import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.models.Hold;
 import com.project.librarysystem.models.Patron;
-import com.project.librarysystem.repositories.BookRepository;
+import com.project.librarysystem.repositories.BookCopyRepository;
 import com.project.librarysystem.repositories.HoldRepository;
 import com.project.librarysystem.repositories.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class HoldService {
     @Autowired
     HoldRepository holdRepository;
     @Autowired
-    BookRepository bookRepository;
+    BookCopyRepository bookCopyRepository;
     @Autowired
     PatronRepository patronRepository;
 
@@ -34,14 +34,14 @@ public class HoldService {
    private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
    @Transactional
-   public Hold checkout(Long patronId, Long bookId){
+   public Hold checkout(Long patronId, Long bookCopyId){
 
-        Optional<Book> obj = bookRepository.findById(bookId);
-        Book book = obj.orElseThrow(() -> new ResourceNotFoundException("Book with" + bookId + " not found"));
+        Optional<BookCopy> obj = bookCopyRepository.findById(bookCopyId);
+        BookCopy bookCopy = obj.orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
 
-        if(bookRepository.isBookAvailable(bookId)) {
-            book.setStatus(BookStatus.CHECKED_OUT);
-            bookRepository.save(book);
+        if(bookCopyRepository.isBookCopyAvailable(bookCopyId)) {
+            bookCopy.setStatus(BookStatus.CHECKED_OUT);
+            bookCopyRepository.save(bookCopy);
        }
         else {
             throw new ResourceNotAvailableException("Book is not available");
@@ -51,7 +51,7 @@ public class HoldService {
         Patron patron = pt.orElseThrow(() -> new ResourceNotFoundException("Patron with" + patronId + "not found"));
 
         Hold hold = Hold.builder()
-                .book(book)
+                .bookCopy(bookCopy)
                 .patron(patron)
                 .dueDate(LocalDate.now(ZoneId.of("UTC")).plusDays(LOAN_DAYS))
                 .build();
@@ -77,9 +77,9 @@ public class HoldService {
 
         hold.setCheckIn(checkin);
         hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
-        Book book = hold.getBook();
+        BookCopy book = hold.getBookCopy();
         book.setStatus(BookStatus.AVAILABLE);
-        bookRepository.save(book);
+        bookCopyRepository.save(book);
         hold.setReturned(true);
 
         return holdRepository.save(hold);

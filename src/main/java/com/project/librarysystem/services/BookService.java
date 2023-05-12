@@ -40,9 +40,6 @@ public class BookService{
 
         bk.setTitle(book.getTitle());
         bk.setAuthor(book.getAuthor());
-        bk.setIsbn(book.getIsbn());
-        bk.setPublisher(book.getPublisher());
-        bk.setYearPublished(book.getYearPublished());
 
         bookRepository.save(bk);
         return bk;

@@ -19,8 +19,8 @@ public class HoldController {
 
     @PostMapping("/{patronId}/{bookId}")
     public ResponseEntity<Object> checkout(@PathVariable(value = "patronId") Long patronId,
-                                           @PathVariable(value = "bookId") Long bookId){
-        Hold hold = holdService.checkout(patronId, bookId);
+                                           @PathVariable(value = "bookId") Long bookCopyId){
+        Hold hold = holdService.checkout(patronId, bookCopyId);
         return ResponseEntity.status(HttpStatus.CREATED).body(hold);
     }
 

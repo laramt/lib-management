@@ -6,9 +6,7 @@ import com.project.librarysystem.enums.BookStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Entity
@@ -21,14 +19,8 @@ public class Book {
     private String title;
     @Column(nullable = false)
     private String author;
-    @Column(nullable = false, unique = true)
-    private String isbn;
-    private String publisher;
-    private int yearPublished;
-    @Enumerated(EnumType.STRING)
-    private BookStatus status;
     @JsonIgnore
     @OneToMany(mappedBy = "book")
-    private Set<Hold> holds = new HashSet<>();
+    private List<BookCopy> copies = new ArrayList<>();
 
 }

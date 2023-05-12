@@ -22,8 +22,8 @@ public class Hold {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @JoinColumn( name = "book_copy_id")
+    private BookCopy bookCopy;
     @ManyToOne
     @JoinColumn(name = "patron_id")
     private Patron patron;
