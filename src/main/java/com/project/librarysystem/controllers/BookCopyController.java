@@ -1,5 +1,6 @@
 package com.project.librarysystem.controllers;
 
+import com.project.librarysystem.dtos.BookCopyDTO;
 import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.services.BookCopyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +19,19 @@ public class BookCopyController {
     BookCopyService bookCopyService;
 
     @PostMapping("/new-book")
-    public ResponseEntity<BookCopy> newBookCopy(@RequestBody BookCopy bookCopy){
+    public ResponseEntity<BookCopyDTO> newBookCopy(@RequestBody BookCopyDTO bookCopy){
         return ResponseEntity.status(HttpStatus.CREATED).body(bookCopyService.newBookCopy(bookCopy));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<BookCopy>> getAllBookCopies(){
-        List<BookCopy> list = bookCopyService.findAll();
+    public ResponseEntity<List<BookCopyDTO>> getAllBookCopies(){
+        List<BookCopyDTO> list = bookCopyService.findAll();
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getBookCopyById(@PathVariable Long id){
-        BookCopy bookCopy = bookCopyService.findById(id);
+        BookCopyDTO bookCopy = bookCopyService.findById(id);
         if(!Optional.of(bookCopy).isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("BookCopy does not exists");
         }
@@ -40,7 +41,7 @@ public class BookCopyController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteBookCopyById(@PathVariable Long id){
-        BookCopy bookCopy = bookCopyService.findById(id);
+        BookCopyDTO bookCopy = bookCopyService.findById(id);
         if(!Optional.of(bookCopy).isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("BookCopy does not exists");
         }
@@ -50,13 +51,13 @@ public class BookCopyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateBookCopyCopy(@PathVariable Long id, @RequestBody BookCopy bookCopy){
-        BookCopy bk = bookCopyService.findById(id);
+    public ResponseEntity<Object> updateBookCopy(@PathVariable Long id, @RequestBody BookCopyDTO bookCopy){
+        BookCopyDTO bk = bookCopyService.findById(id);
         if(!Optional.of(bk).isPresent()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("BookCopy does not exists");
         }
 
-        BookCopy updatedBookCopy = bookCopyService.update(id, bookCopy);
+        BookCopyDTO updatedBookCopy = bookCopyService.update(id, bookCopy);
         return ResponseEntity.status(HttpStatus.OK).body(updatedBookCopy);
     }
 
