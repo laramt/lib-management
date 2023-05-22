@@ -6,12 +6,11 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@Data
-@Table(name = "PATRON_TB")
 @Entity
+@Table(name = "PATRON_TB")
 public class Patron {
 
     @Id
@@ -21,10 +20,77 @@ public class Patron {
     private String name;
     private String email;
     private String phoneNumber;
-    @JsonFormat(pattern="dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     @JsonIgnore
     @OneToMany(mappedBy = "patron")
-    private Set<Hold> holds = new HashSet<>();
+    private List<Hold> holds = new ArrayList<>();
 
+    public Patron() {
+    }
+
+    public Patron(Long id, String cardNumber, String name, String email, String phoneNumber, LocalDate birthDate) {
+        this.id = id;
+        this.cardNumber = cardNumber;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public List<Hold> getHolds() {
+        return holds;
+    }
+
+    public void setHolds(List<Hold> holds) {
+        this.holds = holds;
+    }
 }

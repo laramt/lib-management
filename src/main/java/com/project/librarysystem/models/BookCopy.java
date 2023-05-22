@@ -3,16 +3,11 @@ package com.project.librarysystem.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.librarysystem.enums.BookStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table(name = "BOOK_COPY_TB")
 public class BookCopy {
@@ -33,7 +28,11 @@ public class BookCopy {
     @OneToMany(mappedBy = "bookCopy")
     private Set<Hold> holds = new HashSet<>();
 
-    public BookCopy(Book book, String isbn, String publisher, int yearPublished, BookStatus status) {
+    public BookCopy() {
+    }
+
+    public BookCopy(Long id, Book book, String isbn, String publisher, int yearPublished, BookStatus status) {
+        this.id = id;
         this.book = book;
         this.isbn = isbn;
         this.publisher = publisher;
@@ -41,4 +40,72 @@ public class BookCopy {
         this.status = status;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public int getYearPublished() {
+        return yearPublished;
+    }
+
+    public void setYearPublished(int yearPublished) {
+        this.yearPublished = yearPublished;
+    }
+
+    public BookStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BookStatus status) {
+        this.status = status;
+    }
+
+    public Set<Hold> getHolds() {
+        return holds;
+    }
+
+    public void setHolds(Set<Hold> holds) {
+        this.holds = holds;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BookCopy bookCopy)) return false;
+
+        return getId() != null ? getId().equals(bookCopy.getId()) : bookCopy.getId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId() != null ? getId().hashCode() : 0;
+    }
 }
