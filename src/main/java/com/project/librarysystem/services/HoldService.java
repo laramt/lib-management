@@ -1,14 +1,14 @@
 package com.project.librarysystem.services;
 
-import com.project.librarysystem.models.Hold;
+import com.project.librarysystem.dtos.HoldDTO;
 
 import java.util.List;
 
 public interface HoldService {
 
-    Hold checkout(Long patronId, Long bookCopyId);
-    Hold devolution(Long id);
-    List<Hold> findAll();
-    Hold findById(Long id);
+    HoldDTO checkout(Long patronId, Long bookCopyId);
+    HoldDTO devolution(Long id);
+    List<HoldDTO> findAll();
+    HoldDTO findById(Long id);
     
 }
