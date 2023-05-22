@@ -1,6 +1,6 @@
 package com.project.librarysystem.controllers;
 
-import com.project.librarysystem.models.Patron;
+import com.project.librarysystem.dtos.PatronDTO;
 import com.project.librarysystem.services.PatronService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,22 +19,22 @@ public class PatronController {
     PatronService patronService;
 
     @PostMapping("/register")
-    public ResponseEntity<Patron> registerNewPatron(@RequestBody Patron patron){
+    public ResponseEntity<PatronDTO> registerNewPatronDTO(@RequestBody PatronDTO patron){
         return ResponseEntity.status(HttpStatus.CREATED).body(patronService.registerNewPatron(patron));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Patron>> getAllPatrons(){
-        List<Patron> list = patronService.findAll();
+    public ResponseEntity<List<PatronDTO>> getAllPatronDTOs(){
+        List<PatronDTO> list = patronService.findAll();
 
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getPatronById(@PathVariable("id") Long id){
-        Patron patron = patronService.findById(id);
+    public ResponseEntity<Object> getPatronDTOById(@PathVariable("id") Long id){
+        PatronDTO patron = patronService.findById(id);
         if (!Optional.of(patron).isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PatronDTO does not exist");
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(patron);
@@ -43,13 +43,13 @@ public class PatronController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable("id") Long id, @RequestBody Patron patron){
-        Patron pt = patronService.findById(id);
+    public ResponseEntity<Object> update(@PathVariable("id") Long id, @RequestBody PatronDTO patron){
+        PatronDTO pt = patronService.findById(id);
         if (!Optional.of(pt).isPresent()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Patron does not exist");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PatronDTO does not exist");
         }
-        Patron updatedPatron = patronService.update(id, patron);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedPatron);
+        PatronDTO updatedPatronDTO = patronService.update(id, patron);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedPatronDTO);
 
     }
 
