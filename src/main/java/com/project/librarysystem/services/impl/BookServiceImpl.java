@@ -1,49 +1,34 @@
 package com.project.librarysystem.services.impl;
 
+import com.project.librarysystem.dtos.BookDTO;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
+import com.project.librarysystem.mappers.BookMapper;
 import com.project.librarysystem.models.Book;
 import com.project.librarysystem.repositories.BookRepository;
 import com.project.librarysystem.services.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    @Autowired
-    BookRepository bookRepository;
+    private final BookRepository repository;
+    private final BookMapper mapper;
 
-    public Book save(Book book){
-        return bookRepository.save(book);
+    @Override
+    public List<BookDTO> findAll() {
+        List<Book> books = repository.findAll();
+        return mapper.toBookDTOList(books);
     }
 
-    public List<Book> findAll(){
-        return bookRepository.findAll();
-    }
-
-    public Book findById (Long id){
-        Optional<Book> pt = bookRepository.findById(id);
-        Book book = pt.orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
-        return book;
-
-    }
-
-    public void delete (Long id){
-        findById(id);
-        bookRepository.deleteById(id);
-    }
-
-    public Book update (Long id, Book book){
-        Book bk = findById(id);
-
-        bk.setTitle(book.getTitle());
-        bk.setAuthor(book.getAuthor());
-
-        bookRepository.save(bk);
-        return bk;
+    @Override
+    public BookDTO findById(Long id) {
+        Book book = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Book with id " + id + " not found."));
+        return  mapper.toBookDTO(book);
     }
 
 }
