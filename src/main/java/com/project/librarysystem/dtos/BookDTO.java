@@ -14,7 +14,6 @@ public class BookDTO implements Serializable {
     private Long id;
     private String title;
     private String author;
-    //private List<BookCopy> copies = new ArrayList<>();
-
+    private List<BookCopy> copies = new ArrayList<>();
 
 }

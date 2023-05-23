@@ -19,6 +19,5 @@ public class PatronDTO implements Serializable {
     private String email;
     private String phoneNumber;
     private LocalDate birthDate;
-   // private List<Hold> holds = new ArrayList<>();
 
 }

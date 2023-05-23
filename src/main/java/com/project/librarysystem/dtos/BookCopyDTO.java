@@ -2,7 +2,11 @@ package com.project.librarysystem.dtos;
 
 import com.project.librarysystem.enums.BookStatus;
 import com.project.librarysystem.models.Book;
+import com.project.librarysystem.models.Hold;
 import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class BookCopyDTO {
@@ -14,6 +18,5 @@ public class BookCopyDTO {
     private String publisher;
     private int yearPublished;
     private BookStatus status;
-    // private Set<Hold> holds = new HashSet<>();
 
 }
