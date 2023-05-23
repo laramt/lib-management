@@ -1,27 +1,30 @@
 package com.project.librarysystem.services.impl;
 
+import com.project.librarysystem.dtos.BookCopyDTO;
 import com.project.librarysystem.enums.BookStatus;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
+import com.project.librarysystem.mappers.BookCopyMapper;
 import com.project.librarysystem.models.Book;
 import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.repositories.BookCopyRepository;
 import com.project.librarysystem.repositories.BookRepository;
 import com.project.librarysystem.services.BookCopyService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class BookCopyServiceImpl implements BookCopyService {
 
-    @Autowired
-    BookCopyRepository bookCopyRepository;
-    @Autowired
-    BookRepository bookRepository;
+    private final BookCopyRepository repository;
+    private final BookRepository bookRepository;
+    private final BookCopyMapper mapper;
 
-    public BookCopy newBookCopy(BookCopy bookCopy){
+    public BookCopyDTO newBookCopy(BookCopyDTO dto) {
+
+        BookCopy bookCopy = mapper.toBookCopy(dto);
 
         // Check if book is null
         Book book = bookCopy.getBook();
@@ -32,55 +35,57 @@ public class BookCopyServiceImpl implements BookCopyService {
         // Check if title or author is null
         String title = bookCopy.getBook().getTitle();
         String author = bookCopy.getBook().getAuthor();
-        if (title == null || author == null){
+        if (title == null || author == null) {
             throw new ResourceNotFoundException("Author or title cannot be null.");
         }
 
         // Check if book already exists
         Book existingBook = bookRepository.findByTitleAndAuthor(title, author);
         if (existingBook == null) {
-            if (bookCopyRepository.findByIsbn(bookCopy.getIsbn()) != null) {
+            if (repository.findByIsbn(bookCopy.getIsbn()) != null) {
                 throw new RuntimeException("Book with isbn already exists.");
             }
 
             bookCopy.setStatus(BookStatus.AVAILABLE);
             bookRepository.save(book);
-        }
-        else {
+        } else {
             book = existingBook;
         }
 
         bookCopy.setBook(book);
-        return bookCopyRepository.save(bookCopy);
+        repository.save(bookCopy);
+        return mapper.toBookCopyDTO(bookCopy);
     }
 
-    public List<BookCopy> findAll(){
-        return bookCopyRepository.findAll();
+    public List<BookCopyDTO> findAll() {
+        return mapper.toBookCopyDTOList(repository.findAll());
     }
 
-    public BookCopy findById (Long id){
-        Optional<BookCopy> pt = bookCopyRepository.findById(id);
-        BookCopy bookCopy = pt.orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
-        return bookCopy;
+    public BookCopyDTO findById(Long id) {
+        BookCopy bookCopy = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
 
+        return mapper.toBookCopyDTO(bookCopy);
     }
 
-    public void delete (Long id){
-        findById(id);
-        bookCopyRepository.deleteById(id);
+    public void delete(Long id) {
+        BookCopy bookCopy = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
+        repository.deleteById(id);
     }
 
-    public BookCopy update (Long id, BookCopy bookCopy){
-        BookCopy bk = findById(id);
+    public BookCopyDTO update(Long id, BookCopyDTO dto) {
+        BookCopy bookCopy = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
 
-        bk.setBook(bookCopy.getBook());
-        bk.setIsbn(bookCopy.getIsbn());
-        bk.setPublisher(bookCopy.getPublisher());
-        bk.setYearPublished(bookCopy.getYearPublished());
-        bk.setStatus(bookCopy.getStatus());
+        bookCopy.setBook(dto.getBook());
+        bookCopy.setIsbn(dto.getIsbn());
+        bookCopy.setPublisher(dto.getPublisher());
+        bookCopy.setYearPublished(dto.getYearPublished());
+        bookCopy.setStatus(dto.getStatus());
 
-        bookCopyRepository.save(bk);
-        return bk;
+        repository.save(bookCopy);
+        return mapper.toBookCopyDTO(bookCopy);
     }
 
 }

@@ -1,17 +1,19 @@
 package com.project.librarysystem.dtos;
 
-import com.project.librarysystem.models.BookCopy;
+import com.project.librarysystem.enums.BookStatus;
+import com.project.librarysystem.models.Book;
 import lombok.Data;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class BookCopyDTO {
 
     private Long id;
-    private String title;
-    private String author;
-    private List<BookCopy> copies = new ArrayList<>();
+
+    private Book book;
+    private String isbn;
+    private String publisher;
+    private int yearPublished;
+    private BookStatus status;
+    // private Set<Hold> holds = new HashSet<>();
 
 }
