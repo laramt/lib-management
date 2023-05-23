@@ -11,30 +11,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/book")
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookService bookService;
+    private final BookService service;
 
     @GetMapping("/all")
-    public ResponseEntity<List<BookDTO>> getAllBooks() {
-        List<BookDTO> list = bookService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+    public ResponseEntity<List<BookDTO>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getBookById(@PathVariable Long id) {
-        BookDTO book = bookService.findById(id);
-        if (!Optional.of(book).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Book does not exists");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(book);
+    public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
-
 
 }

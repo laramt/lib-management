@@ -8,56 +8,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/book-copies")
+@RequestMapping("/book-copy")
 @RequiredArgsConstructor
 public class BookCopyController {
 
-    private final BookCopyService bookCopyService;
+    private final BookCopyService service;
 
     @PostMapping("/new-book")
-    public ResponseEntity<BookCopyDTO> newBookCopy(@RequestBody BookCopyDTO bookCopy) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(bookCopyService.newBookCopy(bookCopy));
+    public ResponseEntity<BookCopyDTO> insert(@RequestBody BookCopyDTO bookCopy) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.newBookCopy(bookCopy));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<BookCopyDTO>> getAllBookCopies() {
-        List<BookCopyDTO> list = bookCopyService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+    public ResponseEntity<List<BookCopyDTO>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getBookCopyById(@PathVariable Long id) {
-        BookCopyDTO bookCopy = bookCopyService.findById(id);
-        if (!Optional.of(bookCopy).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("BookCopy does not exists");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(bookCopy);
+    public ResponseEntity<BookCopyDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteBookCopyById(@PathVariable Long id) {
-        BookCopyDTO bookCopy = bookCopyService.findById(id);
-        if (!Optional.of(bookCopy).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("BookCopy does not exists");
-        }
-
-        bookCopyService.delete(id);
-        return ResponseEntity.status(HttpStatus.OK).body("BookCopy deleted");
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateBookCopy(@PathVariable Long id, @RequestBody BookCopyDTO bookCopy) {
-        BookCopyDTO bk = bookCopyService.findById(id);
-        if (!Optional.of(bk).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("BookCopy does not exists");
-        }
-
-        BookCopyDTO updatedBookCopy = bookCopyService.update(id, bookCopy);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedBookCopy);
+    public ResponseEntity<BookCopyDTO> update(@PathVariable Long id, @RequestBody BookCopyDTO dto) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.update(id, dto));
     }
 
 }

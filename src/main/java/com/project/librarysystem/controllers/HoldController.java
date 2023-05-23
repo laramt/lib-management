@@ -8,46 +8,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/hold")
 @RequiredArgsConstructor
 public class HoldController {
 
-    private final HoldService holdService;
+    private final HoldService service;
 
     @PostMapping("/{patronId}/{bookId}")
     public ResponseEntity<Object> checkout(@PathVariable(value = "patronId") Long patronId,
                                            @PathVariable(value = "bookId") Long bookCopyId) {
-        HoldDTO hold = holdService.checkout(patronId, bookCopyId);
+        HoldDTO hold = service.checkout(patronId, bookCopyId);
         return ResponseEntity.status(HttpStatus.CREATED).body(hold);
     }
 
     @PutMapping("/devolution/{id}")
     public ResponseEntity<Object> devolution(@PathVariable(value = "id") Long id) {
-        HoldDTO hd = holdService.findById(id);
-        if (!Optional.of(hd).isPresent()) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("HoldDTO with id " + id + " not found.");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(holdService.devolution(id));
+        return ResponseEntity.status(HttpStatus.OK).body(service.devolution(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<HoldDTO>> getAllHoldDTO() {
-        List<HoldDTO> list = holdService.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(list);
+    public ResponseEntity<List<HoldDTO>> getAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getHoldDTOById(@PathVariable Long id) {
-        HoldDTO hold = holdService.findById(id);
-        if (!Optional.of(hold).isPresent()) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("HoldDTO with id " + id + " not found.");
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(hold);
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
     }
 
 }
