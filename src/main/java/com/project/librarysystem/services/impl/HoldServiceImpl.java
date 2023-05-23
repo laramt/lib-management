@@ -1,5 +1,6 @@
 package com.project.librarysystem.services.impl;
 
+import com.project.librarysystem.dtos.HoldDTO;
 import com.project.librarysystem.enums.BookStatus;
 import com.project.librarysystem.exceptions.ResourceNotAvailableException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
@@ -35,7 +36,7 @@ public class HoldServiceImpl implements HoldService {
    private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
    @Transactional
-   public Hold checkout(Long patronId, Long bookCopyId){
+   public HoldDTO checkout(Long patronId, Long bookCopyId){
 
         Optional<BookCopy> obj = bookCopyRepository.findById(bookCopyId);
         BookCopy bookCopy = obj.orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
@@ -57,42 +58,46 @@ public class HoldServiceImpl implements HoldService {
                 .dueDate(LocalDate.now(ZoneId.of("UTC")).plusDays(LOAN_DAYS))
                 .build();
 
-        return holdRepository.save(hold);
+       //return holdRepository.save(hold);
+       return null;
     }
 
     @Transactional
-    public Hold devolution(Long id){
+    public HoldDTO devolution(Long id){
 
-        Hold hold = findById(id);
-        LocalDate checkin = LocalDate.now();
-        BigDecimal fee;
-
-        BigDecimal lateDays = BigDecimal.valueOf(ChronoUnit.DAYS.between(hold.getDueDate(), checkin));
-
-        if (lateDays.compareTo(BigDecimal.ZERO) > 0) {
-            fee = lateDays.multiply(DAILY_FEE);
-        }
-        else {
-            fee = new BigDecimal(0.00);
-        }
-
-        hold.setCheckIn(checkin);
-        hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
-        BookCopy book = hold.getBookCopy();
-        book.setStatus(BookStatus.AVAILABLE);
-        bookCopyRepository.save(book);
-        hold.setReturned(true);
-
-        return holdRepository.save(hold);
+//        Hold hold = findById(id);
+//        LocalDate checkin = LocalDate.now();
+//        BigDecimal fee;
+//
+//        BigDecimal lateDays = BigDecimal.valueOf(ChronoUnit.DAYS.between(hold.getDueDate(), checkin));
+//
+//        if (lateDays.compareTo(BigDecimal.ZERO) > 0) {
+//            fee = lateDays.multiply(DAILY_FEE);
+//        }
+//        else {
+//            fee = new BigDecimal(0.00);
+//        }
+//
+//        hold.setCheckIn(checkin);
+//        hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
+//        BookCopy book = hold.getBookCopy();
+//        book.setStatus(BookStatus.AVAILABLE);
+//        bookCopyRepository.save(book);
+//        hold.setReturned(true);
+//
+//        return holdRepository.save(hold);
+        return null;
     }
 
-    public List<Hold> findAll() {
-        return holdRepository.findAll();
+    public List<HoldDTO> findAll() {
+       // return holdRepository.findAll();
+        return null;
     }
 
-    public Hold findById(Long id) {
+    public HoldDTO findById(Long id) {
         Optional<Hold> hd = holdRepository.findById(id);
         Hold hold = hd.orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
-        return hold;
+        //return hold;
+        return null;
     }
 }
