@@ -38,7 +38,7 @@ public class HoldServiceImpl implements HoldService {
     private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
     @Transactional
-    public HoldDTO checkout(Long patronId, Long bookCopyId) {
+    public HoldDTO borrow(Long patronId, Long bookCopyId) {
 
         Optional<BookCopy> obj = bookCopyRepository.findById(bookCopyId);
         BookCopy bookCopy = obj.orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
@@ -80,7 +80,7 @@ public class HoldServiceImpl implements HoldService {
             fee = new BigDecimal(0.00);
         }
 
-        hold.setCheckIn(checkin);
+        hold.setCheckInDate(checkin);
         hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
         BookCopy book = hold.getBookCopy();
         book.setStatus(BookStatus.AVAILABLE);

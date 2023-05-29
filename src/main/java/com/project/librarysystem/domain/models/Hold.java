@@ -2,16 +2,19 @@ package com.project.librarysystem.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Builder
 @Table(name = "HOLD_TB")
-@Data
 public class Hold {
 
     @Id
@@ -24,9 +27,9 @@ public class Hold {
     @JoinColumn(name = "patron_id")
     private Patron patron;
     @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDate checkout;
+    private LocalDate borrowedDate;
     @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDate checkIn;
+    private LocalDate checkInDate;
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate dueDate;
     private BigDecimal lateFee;
@@ -34,7 +37,7 @@ public class Hold {
 
     @PrePersist
     protected void onCreate() {
-        checkout = LocalDate.now();
+        borrowedDate = LocalDate.now();
     }
 
 }

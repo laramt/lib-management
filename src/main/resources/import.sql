@@ -15,7 +15,7 @@ INSERT INTO book_copy_tb (book_id, isbn, publisher, year_published, status) VALU
 INSERT INTO patron_tb (card_number, name, email, phone_number, birth_date) VALUES ('202312345678', 'Anne Doe', 'anne@email.com', '5543999533937', '1999-07-14');
 INSERT INTO patron_tb (card_number, name, email, phone_number, birth_date) VALUES ('202312143279', 'Jane Louis', 'jane@email.com', '5543999426936', '1998-04-10');
 
-INSERT INTO hold_tb (book_copy_id, patron_id, checkout, due_date, returned) VALUES (1L, 1L, '2023-05-10','2023-05-17', false);
-INSERT INTO hold_tb (book_copy_id, patron_id, checkout, due_date, returned) VALUES (2L, 2L, '2023-05-02','2023-05-09', false);
+INSERT INTO hold_tb (book_copy_id, patron_id, borrowed_date, due_date, returned) VALUES (1L, 1L, '2023-05-10','2023-05-17', false);
+INSERT INTO hold_tb (book_copy_id, patron_id, borrowed_date, due_date, returned) VALUES (2L, 2L, '2023-05-02','2023-05-09', false);
 
 

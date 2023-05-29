@@ -21,7 +21,7 @@ public class HoldController {
     public ResponseEntity<Object> borrow(@PathVariable(value = "patronId") Long patronId,
                                          @PathVariable(value = "bookId") Long bookCopyId) {
 
-        HoldDTO dto = service.checkout(patronId, bookCopyId);
+        HoldDTO dto = service.borrow(patronId, bookCopyId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);

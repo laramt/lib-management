@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface HoldService {
 
-    HoldDTO checkout(Long patronId, Long bookCopyId);
+    HoldDTO borrow(Long patronId, Long bookCopyId);
     HoldDTO devolution(Long id);
     List<HoldDTO> findAll();
     HoldDTO findById(Long id);
