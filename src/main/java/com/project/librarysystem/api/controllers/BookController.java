@@ -3,7 +3,6 @@ package com.project.librarysystem.api.controllers;
 import com.project.librarysystem.api.dtos.BookDTO;
 import com.project.librarysystem.domain.services.BookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,12 +20,12 @@ public class BookController {
 
     @GetMapping("/all")
     public ResponseEntity<List<BookDTO>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
 }

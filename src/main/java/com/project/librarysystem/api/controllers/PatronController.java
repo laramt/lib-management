@@ -6,7 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -18,22 +20,27 @@ public class PatronController {
 
     @PostMapping("/register")
     public ResponseEntity<PatronDTO> register(@RequestBody PatronDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.registerNewPatron(dto));
+        dto = service.registerNewPatron(dto);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<PatronDTO>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PatronDTO> getById(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatronDTO> update(@PathVariable("id") Long id, @RequestBody PatronDTO dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.update(id, dto));
+    public ResponseEntity<PatronDTO> update(@PathVariable("id") Long id,
+                                            @RequestBody PatronDTO dto) {
+        return ResponseEntity.ok().body(service.update(id, dto));
     }
 
 }

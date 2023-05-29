@@ -3,10 +3,11 @@ package com.project.librarysystem.api.controllers;
 import com.project.librarysystem.api.dtos.BookCopyDTO;
 import com.project.librarysystem.domain.services.BookCopyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -17,18 +18,22 @@ public class BookCopyController {
     private final BookCopyService service;
 
     @PostMapping("/new-book")
-    public ResponseEntity<BookCopyDTO> insert(@RequestBody BookCopyDTO bookCopy) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.newBookCopy(bookCopy));
+    public ResponseEntity<BookCopyDTO> insert(@RequestBody BookCopyDTO dto) {
+        dto = service.newBookCopy(dto);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(dto.getId()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<BookCopyDTO>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookCopyDTO> getById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.findById(id));
+        return ResponseEntity.ok().body(service.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -38,8 +43,9 @@ public class BookCopyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookCopyDTO> update(@PathVariable Long id, @RequestBody BookCopyDTO dto) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.update(id, dto));
+    public ResponseEntity<BookCopyDTO> update(@PathVariable Long id,
+                                              @RequestBody BookCopyDTO dto) {
+        return ResponseEntity.ok().body(service.update(id, dto));
     }
 
 }
