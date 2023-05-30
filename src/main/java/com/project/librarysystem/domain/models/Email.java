@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
+@Builder
 @Table(name = "EMAIL_TB")
 public class Email {
 
@@ -31,5 +32,5 @@ public class Email {
     protected void onCreate() {
         sendDateEmail = LocalDateTime.now();
     }
-
+    
 }
