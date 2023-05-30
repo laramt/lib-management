@@ -3,15 +3,19 @@ package com.project.librarysystem.domain.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.librarysystem.domain.models.enums.BookStatus;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "BOOK_COPY_TB")
-@Data
 public class BookCopy {
 
     @Id

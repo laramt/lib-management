@@ -2,13 +2,17 @@ package com.project.librarysystem.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.*;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 @Table(name = "BOOK_TB")
-@Data
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
