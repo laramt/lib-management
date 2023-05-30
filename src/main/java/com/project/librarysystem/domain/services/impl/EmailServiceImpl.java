@@ -1,6 +1,8 @@
 package com.project.librarysystem.domain.services.impl;
 
 import com.project.librarysystem.api.dtos.EmailDTO;
+import com.project.librarysystem.domain.mappers.EmailMapper;
+import com.project.librarysystem.domain.models.Email;
 import com.project.librarysystem.domain.repositories.EmailRepository;
 import com.project.librarysystem.domain.services.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,8 @@ public class EmailServiceImpl implements EmailService {
 
     private final EmailRepository repository;
 
+    private final EmailMapper mapper;
+
     @Override
     public EmailDTO send(EmailDTO dto) {
         return null;
@@ -21,7 +25,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public List<EmailDTO> findAll() {
-        return null;
+        List<Email> emails = repository.findAll();
+        return mapper.toBookDTOList(emails);
     }
 
     @Override
