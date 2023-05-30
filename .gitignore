@@ -33,4 +33,5 @@ build/
 .vscode/
 
 # Exclude application properties file
-/src/main/resources/emailconfig.properties
+/src/main/resources/application-test.properties
+src/main/resources/application.properties
