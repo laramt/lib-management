@@ -1,5 +1,6 @@
 package com.project.librarysystem.domain.services.impl;
 
+import com.project.librarysystem.domain.services.EmailService;
 import com.project.librarysystem.domain.services.HoldService;
 import com.project.librarysystem.api.dtos.HoldDTO;
 import com.project.librarysystem.domain.models.enums.BookStatus;
@@ -31,12 +32,14 @@ public class HoldServiceImpl implements HoldService {
     private final HoldRepository holdRepository;
     private final BookCopyRepository bookCopyRepository;
     private final PatronRepository patronRepository;
+    private final EmailService emailService;
     private final HoldMapper mapper;
 
     private static final int LOAN_DAYS = 14;
 
     private static final BigDecimal DAILY_FEE = new BigDecimal(1.20);
 
+    @Override
     @Transactional
     public HoldDTO borrow(Long patronId, Long bookCopyId) {
 
@@ -60,9 +63,11 @@ public class HoldServiceImpl implements HoldService {
                 .build();
 
         holdRepository.save(hold);
+        emailService.sendBorrowedBook(hold);
         return mapper.toHoldDTO(hold);
     }
 
+    @Override
     @Transactional
     public HoldDTO devolution(Long id) {
 
@@ -91,10 +96,12 @@ public class HoldServiceImpl implements HoldService {
         return mapper.toHoldDTO(hold);
     }
 
+    @Override
     public List<HoldDTO> findAll() {
         return mapper.toHoldDTOList(holdRepository.findAll());
     }
 
+    @Override
     public HoldDTO findById(Long id) {
         Hold hold = holdRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
