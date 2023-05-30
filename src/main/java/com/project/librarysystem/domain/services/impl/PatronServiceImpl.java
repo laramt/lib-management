@@ -24,6 +24,7 @@ public class PatronServiceImpl implements PatronService {
     private final PatronMapper mapper;
     private static final int MINIMUM_AGE = 16;
 
+    @Override
     @Transactional
     public PatronDTO registerNewPatron(PatronDTO dto) {
         validatePatronData(dto.getEmail(), dto.getPhoneNumber(), dto.getBirthDate());
@@ -32,10 +33,12 @@ public class PatronServiceImpl implements PatronService {
 
     }
 
+    @Override
     public List<PatronDTO> findAll() {
         return mapper.toPatronDTOList(patronRepository.findAll());
     }
 
+    @Override
     public PatronDTO findById(Long id) {
         Patron patron = patronRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patron with id " + id + " not found."));
@@ -44,6 +47,7 @@ public class PatronServiceImpl implements PatronService {
 
     }
 
+    @Override
     @Transactional
     public PatronDTO update(Long id, PatronDTO dto) {
         Patron patron = patronRepository.findById(id)

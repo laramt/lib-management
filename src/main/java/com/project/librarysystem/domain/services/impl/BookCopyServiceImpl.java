@@ -22,6 +22,7 @@ public class BookCopyServiceImpl implements BookCopyService {
     private final BookRepository bookRepository;
     private final BookCopyMapper mapper;
 
+    @Override
     public BookCopyDTO newBookCopy(BookCopyDTO dto) {
 
         BookCopy bookCopy = mapper.toBookCopy(dto);
@@ -57,10 +58,12 @@ public class BookCopyServiceImpl implements BookCopyService {
         return mapper.toBookCopyDTO(bookCopy);
     }
 
+    @Override
     public List<BookCopyDTO> findAll() {
         return mapper.toBookCopyDTOList(repository.findAll());
     }
 
+    @Override
     public BookCopyDTO findById(Long id) {
         BookCopy bookCopy = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
@@ -68,12 +71,14 @@ public class BookCopyServiceImpl implements BookCopyService {
         return mapper.toBookCopyDTO(bookCopy);
     }
 
+    @Override
     public void delete(Long id) {
         BookCopy bookCopy = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
         repository.deleteById(id);
     }
 
+    @Override
     public BookCopyDTO update(Long id, BookCopyDTO dto) {
         BookCopy bookCopy = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
