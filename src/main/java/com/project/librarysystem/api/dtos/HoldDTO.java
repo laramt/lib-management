@@ -15,8 +15,8 @@ public class HoldDTO implements Serializable {
     private Long id;
     private BookCopy bookCopy;
     private Patron patron;
-    private LocalDate checkout;
-    private LocalDate checkIn;
+    private LocalDate borrowedDate;
+    private LocalDate checkInDate;
     private LocalDate dueDate;
     private BigDecimal lateFee;
     private boolean returned;
