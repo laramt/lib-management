@@ -11,5 +11,6 @@ public interface EmailService {
     void sendLateBook(Hold hold);
     List<EmailDTO> findAll();
     EmailDTO findById(Long id);
+    void sendDueDateTomorrow(Hold hold);
     
 }

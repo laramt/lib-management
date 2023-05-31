@@ -103,6 +103,40 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    public void sendDueDateTomorrow(Hold hold) {
+        try {
+            Email email = Email.builder()
+                    .emailFrom(FROM_EMAIL)
+                    .emailTo(hold.getPatron().getEmail())
+                    .patron(hold.getPatron())
+                    .subject("Book Due Tomorrow.")
+                    .text("Hello, " + hold.getPatron().getName() + "!\n"
+                            + "This is an informational email regarding the book borrowed from the Library.\n"
+                            + "Please note that the volume of the "
+                            + hold.getBookCopy().getBook().getTitle() + " - " + hold.getBookCopy().getBook().getAuthor()
+                            + " borrowed on " + hold.getBorrowedDate() + " is due tomorrow.\n"
+                            + "We kindly request you to return the book to the Library till the end of the day or you will be charged a fine.\n"
+                            + "Thank you for your cooperation!\n"
+                            + "Library Management.")
+                    .build();
+
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(FROM_EMAIL);
+            helper.setTo(hold.getPatron().getEmail());
+            helper.setSubject(email.getSubject());
+            helper.setText(email.getText());
+
+            emailSender.send(message);
+            repository.save(email);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send email.", e);
+        }
+    }
+
+    @Override
     public List<EmailDTO> findAll() {
         List<Email> emails = repository.findAll();
         return mapper.toBookDTOList(emails);
@@ -115,4 +149,6 @@ public class EmailServiceImpl implements EmailService {
 
         return mapper.toEmailDTO(email);
     }
+
+    
 }

@@ -11,4 +11,6 @@ public interface HoldRepository extends JpaRepository<Hold, Long> {
 
     List<Hold> findByDueDateBeforeAndReturnedIsFalse(LocalDate currentDate);
 
+    List<Hold> findByDueDate(LocalDate tomorrow);
+
 }

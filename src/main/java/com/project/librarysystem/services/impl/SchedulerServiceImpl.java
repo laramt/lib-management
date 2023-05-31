@@ -31,4 +31,17 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     }
 
+    @Override
+    @Scheduled(cron = "0 0 20 * * *") // every day at 08 PM
+    public void dueDateTomorrowEmail() {
+        
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+
+        List<Hold> holds = holdRepository.findByDueDate(tomorrow);
+        for (Hold hold : holds) {
+            emailService.sendDueDateTomorrow(hold);
+        }
+
+    }
+
 }
