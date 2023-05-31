@@ -25,7 +25,6 @@ public class EmailServiceImpl implements EmailService {
     private final  JavaMailSender emailSender;
 
     private static final String FROM_EMAIL = "email@email.com";
-    private static final String BORROWED_SUBJECT = "Library Notification: Borrowed Book Details";
 
 
     @Override
@@ -36,7 +35,7 @@ public class EmailServiceImpl implements EmailService {
                     .emailFrom(FROM_EMAIL)
                     .emailTo(hold.getPatron().getEmail())
                     .patron(hold.getPatron())
-                    .subject(BORROWED_SUBJECT)
+                    .subject("Borrowed Book Details")
                     .text("Hello, " + hold.getPatron().getName() + "!\n"
                             + "This is an informational email regarding the book borrowed from the Library.\n"
                             + "IMPORTANT INFOS:\n"
@@ -54,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setFrom(FROM_EMAIL);
             helper.setTo(hold.getPatron().getEmail());
-            helper.setSubject(BORROWED_SUBJECT);
+            helper.setSubject(email.getSubject());
             helper.setText(email.getText());
 
             emailSender.send(message);
@@ -64,6 +63,42 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to send email.", e);
         }
 
+    }
+
+    @Override
+    public void sendLateBook(Hold hold) {
+        try {
+            Email email = Email.builder()
+                    .emailFrom(FROM_EMAIL)
+                    .emailTo(hold.getPatron().getEmail())
+                    .patron(hold.getPatron())
+                    .subject("Book Not Return On Due Day.")
+                    .text("Hello, " + hold.getPatron().getName() + "!\n"
+                            + "This is an informational email regarding the book borrowed from the Library.\n"
+                            + "Please note that the volume of the "
+                            + hold.getBookCopy().getBook().getTitle() + " - " + hold.getBookCopy().getBook().getAuthor()
+                            + " borrowed on " + hold.getBorrowedDate()
+                            + " was due on " + hold.getDueDate() + ". \n"
+                            + "We kindly request you to return the book to the Library.\n"
+                            + "You will need to pay a fee regarding the late devolution.\n"
+                            + "Thank you for your cooperation!\n"
+                            + "Library Management.")
+                    .build();
+
+            MimeMessage message = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setFrom(FROM_EMAIL);
+            helper.setTo(hold.getPatron().getEmail());
+            helper.setSubject(email.getSubject());
+            helper.setText(email.getText());
+
+            emailSender.send(message);
+            repository.save(email);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send email.", e);
+        }
     }
 
     @Override
