@@ -7,11 +7,7 @@ import lombok.*;
 import java.util.*;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
+@Data
 @Table(name = "BOOK_TB")
 public class Book {
     @Id

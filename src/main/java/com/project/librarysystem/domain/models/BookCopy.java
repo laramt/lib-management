@@ -10,11 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
+@Data
 @Table(name = "BOOK_COPY_TB")
 public class BookCopy {
 
