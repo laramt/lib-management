@@ -21,10 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -44,19 +43,22 @@ public class HoldServiceImpl implements HoldService {
     @Transactional
     public HoldDTO borrow(Long patronId, Long bookCopyId) {
 
-        Optional<BookCopy> obj = bookCopyRepository.findById(bookCopyId);
-        BookCopy bookCopy = obj.orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
+        // verify if book copy and patron exists
+        BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
+            .orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
 
+        Patron patron = patronRepository.findById(patronId)
+            .orElseThrow(() -> new ResourceNotFoundException("Patron with" + patronId + "not found"));
+
+        // verify if book is available    
         if (bookCopyRepository.isBookCopyAvailable(bookCopyId)) {
             bookCopy.setStatus(BookStatus.CHECKED_OUT);
             bookCopyRepository.save(bookCopy);
         } else {
             throw new ResourceNotAvailableException("Book is not available");
         }
-
-        Optional<Patron> pt = patronRepository.findById(patronId);
-        Patron patron = pt.orElseThrow(() -> new ResourceNotFoundException("Patron with" + patronId + "not found"));
-
+      
+        // build, save it to repository and send informational email
         Hold hold = Hold.builder()
                 .bookCopy(bookCopy)
                 .patron(patron)
@@ -68,32 +70,39 @@ public class HoldServiceImpl implements HoldService {
         return mapper.toHoldDTO(hold);
     }
 
+
     @Override
     @Transactional
     public HoldDTO devolution(Long id) {
 
+        // verify if hold exists
         Hold hold = holdRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
 
-        LocalDate checkin = LocalDate.now();
+        // set devolution date
+        LocalDate checkInDate = LocalDate.now();
+        
+        // check if devolution is late and set fee
+        int lateDays = Period.between(hold.getDueDate(), checkInDate).getDays();
         BigDecimal fee;
-
-        BigDecimal lateDays = BigDecimal.valueOf(ChronoUnit.DAYS.between(hold.getDueDate(), checkin));
-
-        if (lateDays.compareTo(BigDecimal.ZERO) > 0) {
-            fee = lateDays.multiply(DAILY_FEE);
+        
+        if (lateDays > 0) {
+            fee = BigDecimal.valueOf(lateDays).multiply(DAILY_FEE);
         } else {
-            fee = new BigDecimal(0.00);
+            fee = BigDecimal.ZERO;
         }
 
-        hold.setCheckInDate(checkin);
-        hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
+        // set book copy and save to repository
         BookCopy book = hold.getBookCopy();
         book.setStatus(BookStatus.AVAILABLE);
         bookCopyRepository.save(book);
-        hold.setReturned(true);
 
+        // set hold and save it to repository
+        hold.setCheckInDate(checkInDate);
+        hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
+        hold.setReturned(true);
         holdRepository.save(hold);
+        
         return mapper.toHoldDTO(hold);
     }
 
