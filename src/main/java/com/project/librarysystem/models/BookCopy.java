@@ -1,34 +1,55 @@
 package com.project.librarysystem.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.librarysystem.models.enums.BookStatus;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 
 @Entity
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "BOOK_COPY_TB")
 public class BookCopy {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
     @Column(nullable = false, unique = true)
     private String isbn;
+
+    @Column(nullable = false)
     private String publisher;
+
+    @Column(nullable = false)
     private int yearPublished;
+
     @Enumerated(EnumType.STRING)
     private BookStatus status;
-    @JsonIgnore
-    @OneToMany(mappedBy = "bookCopy")
-    private Set<Hold> holds = new HashSet<>();
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant createdAt;
+
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+    private Instant updatedAt;
+
+
+    @PrePersist
+    public void prePersist(){
+        createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        updatedAt = Instant.now();
+    }
 
 }
