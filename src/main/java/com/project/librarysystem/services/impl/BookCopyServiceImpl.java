@@ -59,17 +59,18 @@ public class BookCopyServiceImpl implements BookCopyService {
         }
 
         // check if publisher already exists
-        Publisher existingPublisher = publisherRepository.findByName(publisher.getName());
-        if (existingPublisher == null) {
+        String publisherName = publisher.getName();
+        if (!publisherRepository.existsByName(publisherName)) {
             publisherRepository.save(publisher);
         } else {
-            publisher = existingPublisher;
+            publisher = publisherRepository.findByName(publisherName);
         }
 
         // save on repository
         bookCopy.setBook(book);
         bookCopy.setPublisher(publisher);
-        repository.save(bookCopy);
+        bookCopy = repository.save(bookCopy);
+
         return mapper.toBookCopyDTO(bookCopy);
     }
 
