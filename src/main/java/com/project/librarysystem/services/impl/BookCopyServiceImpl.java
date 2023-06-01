@@ -38,8 +38,8 @@ public class BookCopyServiceImpl implements BookCopyService {
         }
 
         // check if title or author is null
-        String title = bookCopy.getBook().getTitle();
-        String author = bookCopy.getBook().getAuthor();
+        String title = book.getTitle();
+        String author = book.getAuthor();
         if (title == null || author == null) {
             throw new ResourceNotFoundException("Author or title cannot be null.");
         }
