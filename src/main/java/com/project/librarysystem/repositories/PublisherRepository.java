@@ -6,4 +6,6 @@ import com.project.librarysystem.models.Publisher;
 
 public interface PublisherRepository extends JpaRepository<Publisher, Long>{
     
+    Publisher findByName(String name);
+
 }

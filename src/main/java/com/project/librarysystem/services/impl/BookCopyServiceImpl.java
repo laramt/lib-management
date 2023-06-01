@@ -5,9 +5,11 @@ import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookCopyMapper;
 import com.project.librarysystem.models.Book;
 import com.project.librarysystem.models.BookCopy;
+import com.project.librarysystem.models.Publisher;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
 import com.project.librarysystem.repositories.BookRepository;
+import com.project.librarysystem.repositories.PublisherRepository;
 import com.project.librarysystem.services.BookCopyService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class BookCopyServiceImpl implements BookCopyService {
 
     private final BookCopyRepository repository;
     private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
     private final BookCopyMapper mapper;
 
     @Override
@@ -54,7 +57,23 @@ public class BookCopyServiceImpl implements BookCopyService {
             book = existingBook;
         }
 
+        // check if publisher is null
+        Publisher publisher = bookCopy.getPublisher();
+        if (publisher == null || publisher.getName() == null) {
+            throw new ResourceNotFoundException("Publisher cannot be null.");
+        }
+
+        // check if publisher already exists
+        Publisher existingPublisher = publisherRepository.findByName(publisher.getName());
+        if (existingPublisher == null) {
+            publisherRepository.save(publisher);
+        } else {
+            publisher = existingPublisher;
+        }
+
+        // save on repository
         bookCopy.setBook(book);
+        bookCopy.setPublisher(publisher);
         repository.save(bookCopy);
         return mapper.toBookCopyDTO(bookCopy);
     }
