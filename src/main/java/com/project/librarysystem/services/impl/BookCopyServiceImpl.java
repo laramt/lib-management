@@ -28,20 +28,20 @@ public class BookCopyServiceImpl implements BookCopyService {
 
         BookCopy bookCopy = mapper.toBookCopy(dto);
 
-        // Check if book is null
+        // check if book is null
         Book book = bookCopy.getBook();
         if (book == null) {
             throw new ResourceNotFoundException("Book cannot be null.");
         }
 
-        // Check if title or author is null
+        // check if title or author is null
         String title = bookCopy.getBook().getTitle();
         String author = bookCopy.getBook().getAuthor();
         if (title == null || author == null) {
             throw new ResourceNotFoundException("Author or title cannot be null.");
         }
 
-        // Check if book already exists
+        // check if book already exists
         Book existingBook = bookRepository.findByTitleAndAuthor(title, author);
         if (existingBook == null) {
             if (repository.findByIsbn(bookCopy.getIsbn()) != null) {
@@ -74,7 +74,7 @@ public class BookCopyServiceImpl implements BookCopyService {
 
     @Override
     public void delete(Long id) {
-        BookCopy bookCopy = repository.findById(id)
+        repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
         repository.deleteById(id);
     }
