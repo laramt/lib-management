@@ -1,5 +1,7 @@
 package com.project.librarysystem.services.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.project.librarysystem.dtos.PublisherDTO;
@@ -27,6 +29,11 @@ public class PublisherServiceImpl implements PublisherService{
         return mapper.toPublisherDTO(publisher);
     }
 
+
+    @Override
+    public List<PublisherDTO> findAll() {
+        return mapper.toPublisherDTOList(repository.findAll());
+    }
     
   
     
