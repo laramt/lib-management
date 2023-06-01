@@ -33,20 +33,15 @@ public class BookCopyServiceImpl implements BookCopyService {
 
         // check if book is null
         Book book = bookCopy.getBook();
-        if (book == null) {
+        if (book == null || book.getTitle() == null || book.getAuthor() == null) {
             throw new ResourceNotFoundException("Book cannot be null.");
         }
 
-        // check if title or author is null
+        // check if book already exists
         String title = book.getTitle();
         String author = book.getAuthor();
-        if (title == null || author == null) {
-            throw new ResourceNotFoundException("Author or title cannot be null.");
-        }
 
-        // check if book already exists
-        Book existingBook = bookRepository.findByTitleAndAuthor(title, author);
-        if (existingBook == null) {
+        if (!bookRepository.existsByTitleAndAuthor(title, author)) {
             if (repository.findByIsbn(bookCopy.getIsbn()) != null) {
                 throw new RuntimeException("Book with isbn already exists.");
             }
@@ -54,7 +49,7 @@ public class BookCopyServiceImpl implements BookCopyService {
             bookCopy.setStatus(BookStatus.AVAILABLE);
             bookRepository.save(book);
         } else {
-            book = existingBook;
+            book = bookRepository.findByTitleAndAuthor(title, author);
         }
 
         // check if publisher is null
