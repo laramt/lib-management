@@ -26,8 +26,9 @@ public class BookCopy {
     @Column(nullable = false, unique = true)
     private String isbn;
 
-    @Column(nullable = false)
-    private String publisher;
+    @ManyToOne
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
 
     @Column(nullable = false)
     private int yearPublished;
