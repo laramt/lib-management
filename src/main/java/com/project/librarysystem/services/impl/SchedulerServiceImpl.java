@@ -23,22 +23,22 @@ public class SchedulerServiceImpl implements SchedulerService {
     @Scheduled(cron = "0 0 10 ? * MON") // every monday at 10 AM
     public void lateDevolutionEmail() {
 
-        LocalDate currentDate = LocalDate.now();
-        List<Hold> holds = holdRepository.findByDueDateBeforeAndReturnedIsFalse(currentDate);
+        List<Hold> holds = holdRepository
+            .findByDueDateBeforeAndReturnedIsFalse(LocalDate.now());
 
         holds.stream()
-        .forEach(hold -> emailService.sendLateBook(hold));
+            .forEach(hold -> emailService.sendLateBook(hold));
     }
 
     @Override
     @Scheduled(cron = "0 0 20 * * *") // every day at 08 PM
     public void dueDateTomorrowEmail() {
         
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        List<Hold> holds = holdRepository.findByDueDate(tomorrow);
+        List<Hold> holds = holdRepository
+            .findByDueDate(LocalDate.now().plusDays(1));
         
         holds.stream()
-        .forEach(hold -> emailService.sendDueDateTomorrow(hold));
+            .forEach(hold -> emailService.sendDueDateTomorrow(hold));
     }
 
 }
