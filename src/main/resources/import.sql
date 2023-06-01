@@ -3,11 +3,16 @@ INSERT INTO book_tb (title, author) VALUES ('A Metamorfose', 'Franz Kafka');
 INSERT INTO book_tb (title, author) VALUES ('O Lugar', 'Annie Ernaux');
 INSERT INTO book_tb (title, author) VALUES ('Normal People', 'Sally Rooney');
 
-INSERT INTO book_copy_tb (book_id, isbn, publisher, year_published, status) VALUES (1L, '9786555320213', 'Rocco', '2020','CHECKED_OUT');
-INSERT INTO book_copy_tb (book_id, isbn, publisher, year_published, status) VALUES (2L, '9786580210008', 'Antofagica', '2019','CHECKED_OUT');
-INSERT INTO book_copy_tb (book_id, isbn, publisher, year_published, status) VALUES (2L, '9726485210008', 'Penguin Classicos', '2003','AVAILABLE');
-INSERT INTO book_copy_tb (book_id, isbn, publisher, year_published, status) VALUES (3L,'9786589733027', 'Fosforo', '2021','AVAILABLE');
-INSERT INTO book_copy_tb (book_id, isbn, publisher, year_published, status) VALUES (4L, '9781984822178', 'Hogarth Press', '2019','AVAILABLE');
+INSERT INTO publisher_tb (name) VALUES ('Rocco');
+INSERT INTO publisher_tb (name) VALUES ('Antofagica');
+INSERT INTO publisher_tb (name) VALUES ('Penguin Classicos');
+
+
+INSERT INTO book_copy_tb (book_id, isbn, publisher_id, year_published, status) VALUES (1L, '9786555320213', 1L, '2020','CHECKED_OUT');
+INSERT INTO book_copy_tb (book_id, isbn, publisher_id, year_published, status) VALUES (2L, '9786580210008', 2L, '2019','CHECKED_OUT');
+INSERT INTO book_copy_tb (book_id, isbn, publisher_id, year_published, status) VALUES (2L, '9726485210008', 3L, '2003','AVAILABLE');
+INSERT INTO book_copy_tb (book_id, isbn, publisher_id, year_published, status) VALUES (3L,'9786589733027', 1L, '2021','AVAILABLE');
+INSERT INTO book_copy_tb (book_id, isbn, publisher_id, year_published, status) VALUES (4L, '9781984822178', 2L, '2019','AVAILABLE');
 
 
 
