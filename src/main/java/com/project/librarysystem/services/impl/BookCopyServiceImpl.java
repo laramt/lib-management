@@ -1,6 +1,7 @@
 package com.project.librarysystem.services.impl;
 
 import com.project.librarysystem.dtos.BookCopyDTO;
+import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookCopyMapper;
 import com.project.librarysystem.models.BookCopy;
@@ -31,7 +32,7 @@ public class BookCopyServiceImpl implements BookCopyService {
       
         // check if isbn exists
         if (repository.existsByIsbn(bookCopy.getIsbn())) {
-            throw new RuntimeException("Book with isbn already exists.");
+            throw new InvalidInputException("Book with isbn " + bookCopy.getIsbn() + " already exists.");
         }
         
         // build and save on repository
