@@ -3,7 +3,6 @@ package com.project.librarysystem.services.impl;
 import com.project.librarysystem.dtos.BookCopyDTO;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookCopyMapper;
-import com.project.librarysystem.models.Book;
 import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
