@@ -34,6 +34,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getOrCreateBook(Book book) {
+
+        if ( book == null || book.getTitle() == null ||book.getAuthor() == null) {
+            throw new ResourceNotFoundException("Book, title or author cannot be null.");
+        }
       
         String title = book.getTitle();
         String author = book.getAuthor();

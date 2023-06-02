@@ -31,28 +31,16 @@ public class BookCopyServiceImpl implements BookCopyService {
     public BookCopyDTO newBookCopy(BookCopyDTO dto) {
 
         BookCopy bookCopy = mapper.toBookCopy(dto);
-
-        // check if book is null
-        Book book = bookCopy.getBook();
-        if ( book == null || book.getTitle() == null ||book.getAuthor() == null) {
-            throw new ResourceNotFoundException("Book, title or author cannot be null.");
-        }
-
+      
         // check if isbn exists
         if (repository.findByIsbn(bookCopy.getIsbn()) != null) {
             throw new RuntimeException("Book with isbn already exists.");
         }
-
-        // check if publisher is null
-        Publisher publisher = bookCopy.getPublisher();
-        if (publisher == null || publisher.getName() == null) {
-            throw new ResourceNotFoundException("Publisher cannot be null.");
-        }
-
+        
         // save on repository
-        bookCopy.setBook(bookService.getOrCreateBook(book));
+        bookCopy.setBook(bookService.getOrCreateBook(bookCopy.getBook()));
         bookCopy.setStatus(BookStatus.AVAILABLE);
-        bookCopy.setPublisher(publisherService.getOrCreatPublisher(publisher));
+        bookCopy.setPublisher(publisherService.getOrCreatPublisher(bookCopy.getPublisher()));
         bookCopy = repository.save(bookCopy);
 
         return mapper.toBookCopyDTO(bookCopy);
