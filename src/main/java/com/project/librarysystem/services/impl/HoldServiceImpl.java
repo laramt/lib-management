@@ -22,14 +22,13 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.ZoneId;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class HoldServiceImpl implements HoldService {
 
-    private final HoldRepository holdRepository;
+    private final HoldRepository repository;
     private final BookCopyRepository bookCopyRepository;
     private final PatronRepository patronRepository;
     private final EmailService emailService;
@@ -62,10 +61,10 @@ public class HoldServiceImpl implements HoldService {
         Hold hold = Hold.builder()
                 .bookCopy(bookCopy)
                 .patron(patron)
-                .dueDate(LocalDate.now(ZoneId.of("UTC")).plusDays(LOAN_DAYS))
+                .dueDate(LocalDate.now().plusDays(LOAN_DAYS))
                 .build();
 
-        holdRepository.save(hold);
+        repository.save(hold);
         emailService.sendBorrowedBook(hold);
         return mapper.toHoldDTO(hold);
     }
@@ -76,7 +75,7 @@ public class HoldServiceImpl implements HoldService {
     public HoldDTO devolution(Long id) {
 
         // verify if hold exists
-        Hold hold = holdRepository.findById(id)
+        Hold hold = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
 
         // set devolution date
@@ -101,19 +100,19 @@ public class HoldServiceImpl implements HoldService {
         hold.setCheckInDate(checkInDate);
         hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
         hold.setReturned(true);
-        holdRepository.save(hold);
+        repository.save(hold);
         
         return mapper.toHoldDTO(hold);
     }
 
     @Override
     public List<HoldDTO> findAll() {
-        return mapper.toHoldDTOList(holdRepository.findAll());
+        return mapper.toHoldDTOList(repository.findAll());
     }
 
     @Override
     public HoldDTO findById(Long id) {
-        Hold hold = holdRepository.findById(id)
+        Hold hold = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
         return mapper.toHoldDTO(hold);
     }
