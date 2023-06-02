@@ -34,6 +34,20 @@ public class PublisherServiceImpl implements PublisherService{
     public List<PublisherDTO> findAll() {
         return mapper.toPublisherDTOList(repository.findAll());
     }
+
+
+    @Override
+    public Publisher getOrCreatPublisher(Publisher publisher) {
+         
+         String publisherName = publisher.getName();
+         if (!repository.existsByName(publisherName)) {
+            repository.save(publisher);
+         } else {
+             publisher = repository.findByName(publisherName);
+         }
+
+         return publisher;
+    }
     
   
     

@@ -11,6 +11,7 @@ import com.project.librarysystem.repositories.BookCopyRepository;
 import com.project.librarysystem.repositories.PublisherRepository;
 import com.project.librarysystem.services.BookCopyService;
 import com.project.librarysystem.services.BookService;
+import com.project.librarysystem.services.PublisherService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class BookCopyServiceImpl implements BookCopyService {
 
     private final BookCopyRepository repository;
     private final BookService bookService;
-    private final PublisherRepository publisherRepository;
+    private final PublisherService publisherService;
     private final BookCopyMapper mapper;
 
     @Override
@@ -48,18 +49,10 @@ public class BookCopyServiceImpl implements BookCopyService {
             throw new ResourceNotFoundException("Publisher cannot be null.");
         }
 
-        // check if publisher already exists
-        String publisherName = publisher.getName();
-        if (!publisherRepository.existsByName(publisherName)) {
-            publisherRepository.save(publisher);
-        } else {
-            publisher = publisherRepository.findByName(publisherName);
-        }
-
         // save on repository
         bookCopy.setBook(bookService.getOrCreateBook(book));
         bookCopy.setStatus(BookStatus.AVAILABLE);
-        bookCopy.setPublisher(publisher);
+        bookCopy.setPublisher(publisherService.getOrCreatPublisher(publisher));
         bookCopy = repository.save(bookCopy);
 
         return mapper.toBookCopyDTO(bookCopy);
