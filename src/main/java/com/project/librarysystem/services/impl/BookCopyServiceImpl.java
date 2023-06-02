@@ -8,9 +8,9 @@ import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.models.Publisher;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
-import com.project.librarysystem.repositories.BookRepository;
 import com.project.librarysystem.repositories.PublisherRepository;
 import com.project.librarysystem.services.BookCopyService;
+import com.project.librarysystem.services.BookService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ import java.util.List;
 public class BookCopyServiceImpl implements BookCopyService {
 
     private final BookCopyRepository repository;
-    private final BookRepository bookRepository;
+    private final BookService bookService;
     private final PublisherRepository publisherRepository;
     private final BookCopyMapper mapper;
 
@@ -33,23 +33,13 @@ public class BookCopyServiceImpl implements BookCopyService {
 
         // check if book is null
         Book book = bookCopy.getBook();
-        if (book == null || book.getTitle() == null || book.getAuthor() == null) {
-            throw new ResourceNotFoundException("Book cannot be null.");
+        if ( book == null || book.getTitle() == null ||book.getAuthor() == null) {
+            throw new ResourceNotFoundException("Book, title or author cannot be null.");
         }
 
-        // check if book already exists
-        String title = book.getTitle();
-        String author = book.getAuthor();
-
-        if (!bookRepository.existsByTitleAndAuthor(title, author)) {
-            if (repository.findByIsbn(bookCopy.getIsbn()) != null) {
-                throw new RuntimeException("Book with isbn already exists.");
-            }
-
-            bookCopy.setStatus(BookStatus.AVAILABLE);
-            bookRepository.save(book);
-        } else {
-            book = bookRepository.findByTitleAndAuthor(title, author);
+        // check if isbn exists
+        if (repository.findByIsbn(bookCopy.getIsbn()) != null) {
+            throw new RuntimeException("Book with isbn already exists.");
         }
 
         // check if publisher is null
@@ -67,7 +57,8 @@ public class BookCopyServiceImpl implements BookCopyService {
         }
 
         // save on repository
-        bookCopy.setBook(book);
+        bookCopy.setBook(bookService.getOrCreateBook(book));
+        bookCopy.setStatus(BookStatus.AVAILABLE);
         bookCopy.setPublisher(publisher);
         bookCopy = repository.save(bookCopy);
 

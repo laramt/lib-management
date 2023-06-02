@@ -32,4 +32,19 @@ public class BookServiceImpl implements BookService {
         return  mapper.toBookDTO(book);
     }
 
+    @Override
+    public Book getOrCreateBook(Book book) {
+      
+        String title = book.getTitle();
+        String author = book.getAuthor();
+
+        if (!repository.existsByTitleAndAuthor(title, author)) {
+            repository.save(book);
+        } else {
+            book = repository.findByTitleAndAuthor(title, author);
+        }
+
+        return book;
+    }
+
 }
