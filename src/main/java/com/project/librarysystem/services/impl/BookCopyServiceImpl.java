@@ -5,10 +5,8 @@ import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookCopyMapper;
 import com.project.librarysystem.models.Book;
 import com.project.librarysystem.models.BookCopy;
-import com.project.librarysystem.models.Publisher;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
-import com.project.librarysystem.repositories.PublisherRepository;
 import com.project.librarysystem.services.BookCopyService;
 import com.project.librarysystem.services.BookService;
 import com.project.librarysystem.services.PublisherService;
@@ -37,12 +35,15 @@ public class BookCopyServiceImpl implements BookCopyService {
             throw new RuntimeException("Book with isbn already exists.");
         }
         
-        // save on repository
-        bookCopy.setBook(bookService.getOrCreateBook(bookCopy.getBook()));
-        bookCopy.setStatus(BookStatus.AVAILABLE);
-        bookCopy.setPublisher(publisherService.getOrCreatPublisher(bookCopy.getPublisher()));
+        // build and save on repository
+        bookCopy = BookCopy.builder()
+                    .book(bookService.getOrCreateBook(bookCopy.getBook()))
+                    .publisher(publisherService.getOrCreatPublisher(bookCopy.getPublisher()))
+                    .isbn(bookCopy.getIsbn())
+                    .status(BookStatus.AVAILABLE)
+                    .build();
+            
         bookCopy = repository.save(bookCopy);
-
         return mapper.toBookCopyDTO(bookCopy);
     }
 

@@ -12,6 +12,7 @@ import java.time.Instant;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "BOOK_COPY_TB")
 public class BookCopy {
 
