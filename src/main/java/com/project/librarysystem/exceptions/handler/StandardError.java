@@ -1,4 +1,4 @@
-package com.project.librarysystem.exceptions;
+package com.project.librarysystem.exceptions.handler;
 
 import java.io.Serializable;
 import java.time.Instant;
