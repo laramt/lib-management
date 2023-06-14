@@ -37,6 +37,7 @@ public class BookCopyServiceImpl implements BookCopyService {
                     .publisher(publisherService.getOrCreatPublisher(bookCopy.getPublisher()))
                     .isbn(bookCopy.getIsbn())
                     .status(BookStatus.AVAILABLE)
+                    .yearPublished(bookCopy.getYearPublished())
                     .build();
             
         bookCopy = repository.save(bookCopy);
