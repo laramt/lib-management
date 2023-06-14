@@ -1,6 +1,7 @@
 package com.project.librarysystem.services.impl;
 
 import com.project.librarysystem.dtos.BookDTO;
+import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookMapper;
 import com.project.librarysystem.models.Book;
@@ -33,22 +34,24 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getOrCreateBook(Book book) {
+    public BookDTO insert(BookDTO dto) {
+        Book book = mapper.toBook(dto);
 
         if ( book == null || book.getTitle() == null ||book.getAuthor() == null) {
             throw new ResourceNotFoundException("Book, title or author cannot be null.");
         }
-      
-        String title = book.getTitle();
-        String author = book.getAuthor();
 
-        if (!repository.existsByTitleAndAuthor(title, author)) {
-            repository.save(book);
-        } else {
-            book = repository.findByTitleAndAuthor(title, author);
+        if (repository.existsByTitleAndAuthor(book.getTitle(), book.getAuthor())) {
+            throw new InvalidInputException("Book \"" + book.getTitle() + " - " + book.getAuthor() + "\" already exists.");
         }
 
-        return book;
+        repository.save(book);
+        return mapper.toBookDTO(book);
+    }
+
+    @Override
+    public Book findByTitleAndAuthor(String title, String author) {
+        return repository.findByTitleAndAuthor(title, author);
     }
 
 }

@@ -9,6 +9,7 @@ public interface BookService {
 
     List<BookDTO> findAll();
     BookDTO findById (Long id);
-    Book getOrCreateBook(Book book);
+    BookDTO insert(BookDTO dto);
+    Book findByTitleAndAuthor(String title, String author);
 
 }
