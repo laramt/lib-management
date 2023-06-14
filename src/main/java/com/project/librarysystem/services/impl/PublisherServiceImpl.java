@@ -37,22 +37,18 @@ public class PublisherServiceImpl implements PublisherService{
 
 
     @Override
-    public Publisher getOrCreatPublisher(Publisher publisher) {
-
+    public PublisherDTO insert(Publisher publisher) {
         if (publisher == null || publisher.getName() == null) {
             throw new ResourceNotFoundException("Publisher cannot be null.");
         }
-         
-         String publisherName = publisher.getName();
-         if (!repository.existsByName(publisherName)) {
-            repository.save(publisher);
-         } else {
-             publisher = repository.findByName(publisherName);
-         }
 
-         return publisher;
+         return mapper.toPublisherDTO(repository.save(publisher));
     }
-    
-  
+
+
+    @Override
+    public Publisher findByName(String name) {
+    return repository.findByName(name);
+    }
     
 }

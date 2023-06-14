@@ -5,6 +5,7 @@ import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookCopyMapper;
 import com.project.librarysystem.models.BookCopy;
+import com.project.librarysystem.models.Publisher;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
 import com.project.librarysystem.services.BookCopyService;
@@ -27,14 +28,18 @@ public class BookCopyServiceImpl implements BookCopyService {
 
     @Override
     public BookCopyDTO newBookCopy(BookCopyDTO dto) {
-
         BookCopy bookCopy = mapper.toBookCopy(dto);
     
-        
+        // check publisher
+        Publisher publisher = publisherService.findByName(bookCopy.getPublisher().getName());
+        if(publisher == null){
+            throw new   InvalidInputException("Publisher with name \"" + bookCopy.getPublisher().getName() + "\" does not exists.");
+        }
+
         // build and save on repository
         bookCopy = BookCopy.builder()
                     .book(bookService.getOrCreateBook(bookCopy.getBook()))
-                    .publisher(publisherService.getOrCreatPublisher(bookCopy.getPublisher()))
+                    .publisher(publisher)
                     .isbn(bookCopy.getIsbn())
                     .status(BookStatus.AVAILABLE)
                     .yearPublished(bookCopy.getYearPublished())
