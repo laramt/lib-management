@@ -12,6 +12,4 @@ public interface BookCopyRepository extends JpaRepository<BookCopy, Long> {
     @Query("SELECT CASE WHEN (b.status = AVAILABLE) THEN TRUE ELSE FALSE END FROM BookCopy b WHERE b.id = :bookCopyId")
     boolean isBookCopyAvailable(@Param("bookCopyId") Long bookCopyId);
 
-    boolean existsByIsbn(String isbn);
-
 }
