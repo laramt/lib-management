@@ -2,7 +2,6 @@ package com.project.librarysystem.dtos;
 
 import lombok.Data;
 
-import com.project.librarysystem.models.Author;
 
 @Data
 public class BookDTO {

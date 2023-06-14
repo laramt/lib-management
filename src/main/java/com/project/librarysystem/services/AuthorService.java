@@ -6,9 +6,8 @@ import com.project.librarysystem.dtos.AuthorDTO;
 
 public interface AuthorService {
 
-    AuthorDTO create(AuthorDTO dto);
+    AuthorDTO insert(AuthorDTO dto);
     List<AuthorDTO> findAll();
-    List<AuthorDTO> findByName(String name);
     AuthorDTO findById (Long id);
     
 }

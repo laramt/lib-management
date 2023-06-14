@@ -25,7 +25,7 @@ public class AuthorController {
 
     @PostMapping("/new-author")
     public ResponseEntity<AuthorDTO> insert(@RequestBody AuthorDTO dto) {
-        dto = service.create(dto);
+        dto = service.insert(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
@@ -40,11 +40,6 @@ public class AuthorController {
     @GetMapping("/{id}")
     public ResponseEntity<AuthorDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id));
-    }
-
-    @GetMapping("/{name}")
-    public ResponseEntity<List<AuthorDTO>> getByName(@PathVariable String name) {
-        return ResponseEntity.ok().body(service.findByName(name));
     }
 
 }

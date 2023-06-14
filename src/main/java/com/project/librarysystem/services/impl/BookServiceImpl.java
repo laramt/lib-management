@@ -4,7 +4,9 @@ import com.project.librarysystem.dtos.BookDTO;
 import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookMapper;
+import com.project.librarysystem.models.Author;
 import com.project.librarysystem.models.Book;
+import com.project.librarysystem.repositories.AuthorRepository;
 import com.project.librarysystem.repositories.BookRepository;
 import com.project.librarysystem.services.BookService;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
 
     private final BookRepository repository;
+    private final AuthorRepository authorRepository;
     private final BookMapper mapper;
 
     @Override
@@ -37,21 +40,33 @@ public class BookServiceImpl implements BookService {
     public BookDTO insert(BookDTO dto) {
         Book book = mapper.toBook(dto);
 
-        if ( book == null || book.getTitle() == null ||book.getAuthor() == null) {
+        if ( book == null || book.getTitle() == null) {
             throw new ResourceNotFoundException("Book, title or author cannot be null.");
         }
 
-        if (repository.existsByTitleAndAuthor(book.getTitle(), book.getAuthor())) {
-            throw new InvalidInputException("Book \"" + book.getTitle() + " - " + book.getAuthor() + "\" already exists.");
+        Author author = authorRepository.findByName(book.getAuthor().getName());
+        if (author == null) {
+        throw new ResourceNotFoundException("Author with not found.");
+        }
+
+       if (repository.existsByTitleAndAuthor(book.getTitle(), author.getId())) {
+            throw new InvalidInputException("Book \"" + book.getTitle() + " - " + author.getName() + "\" already exists.");
         }
 
         repository.save(book);
         return mapper.toBookDTO(book);
     }
 
+
     @Override
-    public Book findByTitleAndAuthor(String title, String author) {
-        return repository.findByTitleAndAuthor(title, author);
+    public Book findByTitleAndAuthor(String title, String authorName) {
+        Author author = authorRepository.findByName(authorName);
+
+        if (author == null) {
+        throw new ResourceNotFoundException("Author with name \"" + authorName + "\" not found.");
+        }
+
+    return repository.findByTitleAndAuthorId(title, author.getId());
     }
 
 }

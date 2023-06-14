@@ -6,7 +6,8 @@ import com.project.librarysystem.models.Book;
 
 
 public interface BookRepository extends JpaRepository<Book, Long> {
-    Book findByTitleAndAuthor(String title, String author);
-    boolean existsByTitleAndAuthor(String title, String author);
+
+    boolean existsByTitleAndAuthor(String title, Long id);
+    Book findByTitleAndAuthorId(String title, Long id);
 
 }
