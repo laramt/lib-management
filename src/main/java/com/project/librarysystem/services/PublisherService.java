@@ -10,6 +10,7 @@ public interface PublisherService {
     
     PublisherDTO findById(Long id);
     List<PublisherDTO> findAll();
-    Publisher getOrCreatPublisher(Publisher publisher);
+    PublisherDTO insert(Publisher publisher);
+    Publisher findByName(String name);
 
 }
