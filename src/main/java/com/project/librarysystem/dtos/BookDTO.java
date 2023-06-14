@@ -2,14 +2,13 @@ package com.project.librarysystem.dtos;
 
 import lombok.Data;
 
-import java.io.Serializable;
+import com.project.librarysystem.models.Author;
 
 @Data
-public class BookDTO implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class BookDTO {
 
     private Long id;
     private String title;
-    private String author;
+    private AuthorDTO author;
 
 }
