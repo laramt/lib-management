@@ -34,8 +34,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDTO create(AuthorDTO dto) {
-        
+    public AuthorDTO insert(AuthorDTO dto) {
         if(dto.getName() == null || dto.getName().isEmpty()){
             throw new InvalidInputException("Author cannot be null or empty.");
         }
@@ -44,10 +43,5 @@ public class AuthorServiceImpl implements AuthorService {
         return dto;
     }
 
-    @Override
-    public List<AuthorDTO> findByName(String name) {
-        List<Author> authors = repository.findByName(name);
-        return mapper.toAuthorDTOList(authors);
-    }
 
 }

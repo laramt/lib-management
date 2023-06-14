@@ -38,9 +38,9 @@ public class BookCopyServiceImpl implements BookCopyService {
         }
 
         // check book
-        Book book = bookService.findByTitleAndAuthor(bookCopy.getBook().getTitle(), bookCopy.getBook().getAuthor());
-        if(book == null){
-            throw new   InvalidInputException("Book \"" + bookCopy.getBook().getTitle() + " - " + bookCopy.getBook().getAuthor() + "\" does not exists.");
+        Book book = bookService.findByTitleAndAuthor(bookCopy.getBook().getTitle(), bookCopy.getBook().getAuthor().getName());
+        if (book == null) {
+             throw new InvalidInputException("Book \"" + bookCopy.getBook().getTitle() + " - " + bookCopy.getBook().getAuthor().getName() + "\" does not exist.");
         }
 
         // build and save on repository

@@ -10,6 +10,6 @@ public interface BookService {
     List<BookDTO> findAll();
     BookDTO findById (Long id);
     BookDTO insert(BookDTO dto);
-    Book findByTitleAndAuthor(String title, String author);
+    Book findByTitleAndAuthor(String title, String authorName);
 
 }
