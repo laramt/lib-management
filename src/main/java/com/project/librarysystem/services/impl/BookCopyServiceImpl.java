@@ -81,9 +81,9 @@ public class BookCopyServiceImpl implements BookCopyService {
         BookCopy bookCopy = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
 
-        bookCopy.setBook(dto.getBook());
+        //bookCopy.setBook(dto.getBook());
         bookCopy.setIsbn(dto.getIsbn());
-        bookCopy.setPublisher(dto.getPublisher());
+        //bookCopy.setPublisher(dto.getPublisher());
         bookCopy.setYearPublished(dto.getYearPublished());
         bookCopy.setStatus(dto.getStatus());
 

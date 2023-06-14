@@ -15,13 +15,21 @@ import java.util.stream.Collectors;
 public class BookCopyMapper {
 
     private final ModelMapper mapper;
+    private final BookMapper bookMapper;
+    private final PublisherMapper publisherMapper;
 
     public BookCopy toBookCopy(BookCopyDTO dto) {
-        return mapper.map(dto, BookCopy.class);
-    }
+    BookCopy bookCopy = mapper.map(dto, BookCopy.class);
+    bookCopy.setBook(bookMapper.toBook(dto.getBook()));
+    bookCopy.setPublisher(publisherMapper.toPublisher(dto.getPublisher()));
+    return bookCopy;
+}
 
     public BookCopyDTO toBookCopyDTO(BookCopy entity) {
-        return mapper.map(entity, BookCopyDTO.class);
+    BookCopyDTO bookCopy = mapper.map(entity, BookCopyDTO.class);
+    bookCopy.setBook(bookMapper.toBookDTO(entity.getBook()));
+    bookCopy.setPublisher(publisherMapper.toPublisherDTO(entity.getPublisher()));
+    return bookCopy;
     }
 
     public List<BookCopyDTO> toBookCopyDTOList(List<BookCopy> patrons) {
@@ -32,3 +40,4 @@ public class BookCopyMapper {
 
 
 }
+
