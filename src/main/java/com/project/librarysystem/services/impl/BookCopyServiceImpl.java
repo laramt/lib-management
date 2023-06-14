@@ -29,11 +29,7 @@ public class BookCopyServiceImpl implements BookCopyService {
     public BookCopyDTO newBookCopy(BookCopyDTO dto) {
 
         BookCopy bookCopy = mapper.toBookCopy(dto);
-      
-        // check if isbn exists
-        if (repository.existsByIsbn(bookCopy.getIsbn())) {
-            throw new InvalidInputException("Book with isbn " + bookCopy.getIsbn() + " already exists.");
-        }
+    
         
         // build and save on repository
         bookCopy = BookCopy.builder()
