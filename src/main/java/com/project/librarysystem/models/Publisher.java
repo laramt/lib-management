@@ -1,6 +1,7 @@
 package com.project.librarysystem.models;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,20 +33,18 @@ public class Publisher {
     @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist(){
-        createdAt = Instant.now();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     public void preUpdate(){
-        updatedAt = Instant.now();
+        updatedAt = LocalDateTime.now();
     }
 
 }

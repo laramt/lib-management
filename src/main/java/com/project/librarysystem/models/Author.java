@@ -1,6 +1,7 @@
 package com.project.librarysystem.models;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,20 +48,18 @@ public class Author {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Book> books = new ArrayList<>();
     
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant updatedAt;
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist(){
-        createdAt = Instant.now();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     public void preUpdate(){
-        updatedAt = Instant.now();
+        updatedAt = LocalDateTime.now();
     }
 
 }

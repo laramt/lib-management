@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
@@ -33,21 +34,18 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private List<BookCopy> copies = new ArrayList<>();
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Instant updatedAt;
-
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist(){
-        createdAt = Instant.now();
+        createdAt = LocalDateTime.now();
     }
 
     @PreUpdate
     public void preUpdate(){
-        updatedAt = Instant.now();
+        updatedAt = LocalDateTime.now();
     }
 
 }
