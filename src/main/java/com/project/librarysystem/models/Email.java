@@ -1,6 +1,7 @@
 package com.project.librarysystem.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,17 +18,24 @@ public class Email {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+
+    @NotBlank
     private String emailFrom;
-    @Column(nullable = false)
+
+    @NotBlank
     private String emailTo;
+
     @ManyToOne
     @JoinColumn(name = "patron_id")
     private Patron patron;
-    @Column(nullable = false)
+
+    @NotBlank
     private String subject;
-    @Column(columnDefinition = "TEXT", nullable = false)
+
+    @NotBlank
+    @Column(columnDefinition = "TEXT")
     private String text;
+    
     private LocalDateTime createdAt;
 
     @PrePersist

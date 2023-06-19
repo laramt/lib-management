@@ -3,9 +3,9 @@ package com.project.librarysystem.models;
 import com.project.librarysystem.models.enums.BookStatus;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -25,14 +25,13 @@ public class BookCopy {
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Column(nullable = false)
+    @NotBlank
     private String isbn;
 
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
-    @Column(nullable = false)
     private int yearPublished;
 
     @Enumerated(EnumType.STRING)

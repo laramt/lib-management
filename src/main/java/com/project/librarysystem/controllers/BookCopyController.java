@@ -3,6 +3,7 @@ package com.project.librarysystem.controllers;
 import com.project.librarysystem.dtos.BookCopyDTO;
 import com.project.librarysystem.services.BookCopyService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class BookCopyController {
     private final BookCopyService service;
 
     @PostMapping("/new-book")
-    public ResponseEntity<BookCopyDTO> insert(@RequestBody BookCopyDTO dto) {
+    public ResponseEntity<BookCopyDTO> insert(@RequestBody @Valid BookCopyDTO dto) {
         dto = service.newBookCopy(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")

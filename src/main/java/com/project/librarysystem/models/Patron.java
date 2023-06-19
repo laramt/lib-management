@@ -3,13 +3,15 @@ package com.project.librarysystem.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @Getter
@@ -24,20 +26,20 @@ public class Patron {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @NotBlank
     private String cardNumber;
 
-    @Column(nullable = false)
+    @NotBlank
     private String name;
 
-    @Column(nullable = false)
+    @NotBlank
     private String email;
 
-    @Column(nullable = false)
+    @NotBlank
     private String phoneNumber;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
-    @Column(nullable = false)
+    @NotEmpty
     private LocalDate birthDate;
 
     @JsonIgnore
