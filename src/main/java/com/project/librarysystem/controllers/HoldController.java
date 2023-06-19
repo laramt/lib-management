@@ -18,9 +18,9 @@ public class HoldController {
 
     private final HoldService service;
 
-    @PostMapping("/{patronId}/{bookId}")
-    public ResponseEntity<Object> borrow(@PathVariable(value = "patronId") Long patronId,
-                                         @PathVariable(value = "bookId") Long bookCopyId) {
+    @PostMapping(path = "/borrow")
+    public ResponseEntity<Object> borrow(@RequestParam(required = true, name = "patronId") Long patronId,
+                                         @RequestParam(required = true, name = "bookCopyId") Long bookCopyId) {
 
         HoldDTO dto = service.borrow(patronId, bookCopyId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
