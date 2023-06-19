@@ -19,7 +19,7 @@ public class HoldController {
     private final HoldService service;
 
     @PostMapping(path = "/borrow")
-    public ResponseEntity<Object> borrow(@RequestParam(required = true, name = "patronId") Long patronId,
+    public ResponseEntity<HoldDTO> borrow(@RequestParam(required = true, name = "patronId") Long patronId,
                                          @RequestParam(required = true, name = "bookCopyId") Long bookCopyId) {
 
         HoldDTO dto = service.borrow(patronId, bookCopyId);
@@ -29,7 +29,7 @@ public class HoldController {
     }
 
     @PutMapping("/devolution/{id}")
-    public ResponseEntity<Object> devolution(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<HoldDTO> devolution(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok().body(service.devolution(id));
     }
 
@@ -39,7 +39,7 @@ public class HoldController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getById(@PathVariable Long id) {
+    public ResponseEntity<HoldDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
