@@ -11,7 +11,8 @@ Este projeto é um sistema de gerenciamento de biblioteca desenvolvido em Java/S
   </a>
 </p>
 
-#
+Para a versão em inglês, consulte o arquivo [README-EN.md](./README-EN.md).
+
 
 ## Funcionalidades
 
