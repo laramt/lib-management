@@ -3,6 +3,7 @@ package com.project.librarysystem.controllers;
 import com.project.librarysystem.dtos.PatronDTO;
 import com.project.librarysystem.services.PatronService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class PatronController {
     private final PatronService service;
 
     @PostMapping("/register")
-    public ResponseEntity<PatronDTO> register(@RequestBody PatronDTO dto) {
+    public ResponseEntity<PatronDTO> register(@RequestBody @Valid PatronDTO dto) {
         dto = service.registerNewPatron(dto);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
