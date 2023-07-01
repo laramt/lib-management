@@ -1,6 +1,6 @@
 package com.project.librarysystem.services.impl;
 
-import com.project.librarysystem.models.Hold;
+import com.project.librarysystem.models.Loan;
 import com.project.librarysystem.services.EmailService;
 
 import jakarta.mail.internet.MimeMessage;
@@ -23,7 +23,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Transactional
-    public void sendBorrowedBook(Hold hold) {
+    public void sendBorrowedBook(Loan hold) {
         try {
 
             MimeMessage message = emailSender.createMimeMessage();
@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendLateBook(Hold hold) {
+    public void sendLateBook(Loan hold) {
         try {
             
             MimeMessage message = emailSender.createMimeMessage();
@@ -80,7 +80,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendDueDateTomorrow(Hold hold) {
+    public void sendDueDateTomorrow(Loan hold) {
         try {
 
             MimeMessage message = emailSender.createMimeMessage();

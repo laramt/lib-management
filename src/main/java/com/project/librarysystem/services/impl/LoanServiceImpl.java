@@ -1,18 +1,18 @@
 package com.project.librarysystem.services.impl;
 
-import com.project.librarysystem.dtos.HoldDTO;
+import com.project.librarysystem.dtos.response.LoanResponse;
 import com.project.librarysystem.exceptions.ResourceNotAvailableException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
-import com.project.librarysystem.mappers.HoldMapper;
+import com.project.librarysystem.mappers.LoanMapper;
 import com.project.librarysystem.models.BookCopy;
-import com.project.librarysystem.models.Hold;
+import com.project.librarysystem.models.Loan;
 import com.project.librarysystem.models.User;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
-import com.project.librarysystem.repositories.HoldRepository;
+import com.project.librarysystem.repositories.LoanRepository;
 import com.project.librarysystem.repositories.UserRepository;
 import com.project.librarysystem.services.EmailService;
-import com.project.librarysystem.services.HoldService;
+import com.project.librarysystem.services.LoanService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,13 +26,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class HoldServiceImpl implements HoldService {
+public class LoanServiceImpl implements LoanService {
 
-    private final HoldRepository repository;
+    private final LoanRepository repository;
     private final BookCopyRepository bookCopyRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
-    private final HoldMapper mapper;
+    private final LoanMapper mapper;
 
     private static final int LOAN_DAYS = 14;
 
@@ -40,14 +40,14 @@ public class HoldServiceImpl implements HoldService {
 
     @Override
     @Transactional
-    public HoldDTO borrow(Long patronId, Long bookCopyId) {
+    public LoanResponse borrow(Long userId, Long bookCopyId) {
 
         // verify if book copy and patron exists
         BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
             .orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
 
-        User user = userRepository.findById(patronId)
-            .orElseThrow(() -> new ResourceNotFoundException("Patron with" + patronId + "not found"));
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User with" + userId + "not found"));
 
         // verify if book is available    
         if (bookCopyRepository.isBookCopyAvailable(bookCopyId)) {
@@ -58,31 +58,31 @@ public class HoldServiceImpl implements HoldService {
         }
       
         // build, save it to repository and send informational email
-        Hold hold = Hold.builder()
+        Loan loan = Loan.builder()
                 .bookCopy(bookCopy)
                 .user(user)
                 .dueDate(LocalDate.now().plusDays(LOAN_DAYS))
                 .build();
 
-        repository.save(hold);
-        emailService.sendBorrowedBook(hold);
-        return mapper.toHoldDTO(hold);
+        repository.save(loan);
+        emailService.sendBorrowedBook(loan);
+        return mapper.toLoanResponse(loan);
     }
 
 
     @Override
     @Transactional
-    public HoldDTO devolution(Long id) {
+    public LoanResponse devolution(Long id) {
 
         // verify if hold exists
-        Hold hold = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
+        Loan loan = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan with id " + id + " not found."));
 
         // set devolution date
         LocalDate checkInDate = LocalDate.now();
         
         // check if devolution is late and set fee
-        int lateDays = Period.between(hold.getDueDate(), checkInDate).getDays();
+        int lateDays = Period.between(loan.getDueDate(), checkInDate).getDays();
         BigDecimal fee;
         
         if (lateDays > 0) {
@@ -92,28 +92,28 @@ public class HoldServiceImpl implements HoldService {
         }
 
         // set book copy and save to repository
-        BookCopy book = hold.getBookCopy();
+        BookCopy book = loan.getBookCopy();
         book.setStatus(BookStatus.AVAILABLE);
         bookCopyRepository.save(book);
 
         // set hold and save it to repository
-        hold.setCheckInDate(checkInDate);
-        hold.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
-        hold.setReturned(true);
-        repository.save(hold);
+        loan.setCheckInDate(checkInDate);
+        loan.setLateFee(fee.setScale(2, RoundingMode.HALF_EVEN));
+        loan.setReturned(true);
+        repository.save(loan);
         
-        return mapper.toHoldDTO(hold);
+        return mapper.toLoanResponse(loan);
     }
 
     @Override
-    public List<HoldDTO> findAll() {
-        return mapper.toHoldDTOList(repository.findAll());
+    public List<LoanResponse> findAll() {
+        return mapper.toLoanResponseList(repository.findAll());
     }
 
     @Override
-    public HoldDTO findById(Long id) {
-        Hold hold = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Hold with id " + id + " not found."));
-        return mapper.toHoldDTO(hold);
+    public LoanResponse findById(Long id) {
+        Loan loan = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan with id " + id + " not found."));
+        return mapper.toLoanResponse(loan);
     }
 }

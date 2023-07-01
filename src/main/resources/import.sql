@@ -25,7 +25,7 @@ INSERT INTO book_copy_tb (book_id, isbn, publisher_id, year_published, status) V
 INSERT INTO user_tb (name, email, phone_number, birth_date) VALUES ('Anne Doe', 'anne@email.com', '5543999533937', '1999-07-14');
 INSERT INTO user_tb (name, email, phone_number, birth_date) VALUES ('Jane Louis', 'jane@email.com', '5543999426936', '1998-04-10');
 
-INSERT INTO hold_tb (book_copy_id, user_id, borrowed_date, due_date, returned) VALUES (1L, 1L, '2023-05-10','2023-05-17', false);
-INSERT INTO hold_tb (book_copy_id, user_id, borrowed_date, due_date, returned) VALUES (2L, 2L, '2023-05-02','2023-05-09', false);
+INSERT INTO loan_tb (book_copy_id, user_id, borrowed_date, due_date, returned) VALUES (1L, 1L, '2023-05-10','2023-05-17', false);
+INSERT INTO loan_tb (book_copy_id, user_id, borrowed_date, due_date, returned) VALUES (2L, 2L, '2023-05-02','2023-05-09', false);
 
 

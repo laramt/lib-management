@@ -8,14 +8,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Builder
-@Table(name = "HOLD_TB")
-public class Hold {
+@Table(name = "loan_tb")
+public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,12 +1,12 @@
 package com.project.librarysystem.services;
 
-import com.project.librarysystem.models.Hold;
+import com.project.librarysystem.models.Loan;
 
 
 public interface EmailService {
 
-    void sendBorrowedBook(Hold hold);
-    void sendLateBook(Hold hold);
-    void sendDueDateTomorrow(Hold hold);
+    void sendBorrowedBook(Loan hold);
+    void sendLateBook(Loan hold);
+    void sendDueDateTomorrow(Loan hold);
     
 }

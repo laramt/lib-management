@@ -36,7 +36,7 @@ public class User {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<Hold> holds = new ArrayList<>();
+    private List<Loan> loans = new ArrayList<>();
 
     private LocalDateTime createdAt;
 

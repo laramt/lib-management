@@ -1,7 +1,7 @@
 package com.project.librarysystem.controllers;
 
-import com.project.librarysystem.dtos.HoldDTO;
-import com.project.librarysystem.services.HoldService;
+import com.project.librarysystem.dtos.response.LoanResponse;
+import com.project.librarysystem.services.LoanService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,34 +12,34 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/hold")
+@RequestMapping("/loans")
 @RequiredArgsConstructor
-public class HoldController {
+public class LoanController {
 
-    private final HoldService service;
+    private final LoanService service;
 
     @PostMapping(path = "/borrow")
-    public ResponseEntity<HoldDTO> borrow(@RequestParam(required = true, name = "patronId") Long patronId,
+    public ResponseEntity<LoanResponse> borrow(@RequestParam(required = true, name = "patronId") Long patronId,
                                          @RequestParam(required = true, name = "bookCopyId") Long bookCopyId) {
 
-        HoldDTO dto = service.borrow(patronId, bookCopyId);
+        LoanResponse dto = service.borrow(patronId, bookCopyId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping("/devolution/{id}")
-    public ResponseEntity<HoldDTO> devolution(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<LoanResponse> devolution(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok().body(service.devolution(id));
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<HoldDTO>> getAll() {
+    public ResponseEntity<List<LoanResponse>> getAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HoldDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<LoanResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 

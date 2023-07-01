@@ -1,7 +1,7 @@
 package com.project.librarysystem.services.impl;
 
-import com.project.librarysystem.models.Hold;
-import com.project.librarysystem.repositories.HoldRepository;
+import com.project.librarysystem.models.Loan;
+import com.project.librarysystem.repositories.LoanRepository;
 import com.project.librarysystem.services.EmailService;
 import com.project.librarysystem.services.SchedulerService;
 
@@ -17,16 +17,16 @@ import java.util.List;
 public class SchedulerServiceImpl implements SchedulerService {
 
     private final EmailService emailService;
-    private final HoldRepository holdRepository;
+    private final LoanRepository loanRepository;
 
     @Override
     @Scheduled(cron = "0 0 10 ? * MON") // every monday at 10 AM
     public void lateDevolutionEmail() {
 
-        List<Hold> holds = holdRepository
+        List<Loan> loans = loanRepository
             .findByDueDateBeforeAndReturnedIsFalse(LocalDate.now());
 
-        holds.stream()
+        loans.stream()
             .forEach(hold -> emailService.sendLateBook(hold));
     }
 
@@ -34,10 +34,10 @@ public class SchedulerServiceImpl implements SchedulerService {
     @Scheduled(cron = "0 0 20 * * *") // every day at 08 PM
     public void dueDateTomorrowEmail() {
         
-        List<Hold> holds = holdRepository
+        List<Loan> loans = loanRepository
             .findByDueDate(LocalDate.now().plusDays(1));
         
-        holds.stream()
+        loans.stream()
             .forEach(hold -> emailService.sendDueDateTomorrow(hold));
     }
 
