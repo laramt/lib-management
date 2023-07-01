@@ -4,18 +4,19 @@ import com.project.librarysystem.models.Hold;
 import com.project.librarysystem.services.EmailService;
 
 import jakarta.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
-@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
-    private final  JavaMailSender emailSender;
+    @Autowired
+   JavaMailSender emailSender;
 
     private static final String FROM_EMAIL = "email@email.com";
 
@@ -29,9 +30,9 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom(FROM_EMAIL);
-            helper.setTo(hold.getPatron().getEmail());
+            helper.setTo(hold.getUser().getEmail());
             helper.setSubject("Borrowed Book Details");
-            helper.setText("Hello, " + hold.getPatron().getName() + "!\n"
+            helper.setText("Hello, " + hold.getUser().getName() + "!\n"
                             + "This is an informational email regarding the book borrowed from the Library.\n"
                             + "IMPORTANT INFOS:\n"
                             + "Book: " + hold.getBookCopy().getBook().getTitle() + " - " + hold.getBookCopy().getBook().getAuthor().getName() + "\n"
@@ -58,9 +59,9 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom(FROM_EMAIL);
-            helper.setTo(hold.getPatron().getEmail());
+            helper.setTo(hold.getUser().getEmail());
             helper.setSubject("Book Not Return On Due Day.");
-            helper.setText("Hello, " + hold.getPatron().getName() + "!\n"
+            helper.setText("Hello, " + hold.getUser().getName() + "!\n"
                             + "This is an informational email regarding the book borrowed from the Library.\n"
                             + "Please note that the volume of the "
                             + hold.getBookCopy().getBook().getTitle() + " - " + hold.getBookCopy().getBook().getAuthor()
@@ -86,9 +87,9 @@ public class EmailServiceImpl implements EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setFrom(FROM_EMAIL);
-            helper.setTo(hold.getPatron().getEmail());
+            helper.setTo(hold.getUser().getEmail());
             helper.setSubject("Book Due Tomorrow.");
-            helper.setText("Hello, " + hold.getPatron().getName() + "!\n"
+            helper.setText("Hello, " + hold.getUser().getName() + "!\n"
                             + "This is an informational email regarding the book borrowed from the Library.\n"
                             + "Please note that the volume of the "
                             + hold.getBookCopy().getBook().getTitle() + " - " + hold.getBookCopy().getBook().getAuthor()

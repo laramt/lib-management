@@ -3,7 +3,6 @@ package com.project.librarysystem.models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -13,35 +12,30 @@ import java.util.List;
 
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
-@Table(name = "PATRON_TB")
-public class Patron {
+@Table(name = "user_tb")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String cardNumber;
-
-    @NotBlank
+    @Column(nullable = false)
     private String name;
 
-    @NotBlank
+    @Column(nullable = false)
     private String email;
 
-    @NotBlank
+    @Column(nullable = false)
     private String phoneNumber;
 
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "patron")
+    @OneToMany(mappedBy = "user")
     private List<Hold> holds = new ArrayList<>();
 
     private LocalDateTime createdAt;

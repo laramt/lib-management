@@ -18,6 +18,6 @@ public class HoldDTO implements Serializable {
     private BigDecimal lateFee;
     private boolean returned;
     private BookCopyDTO bookCopy;
-    private PatronDTO patron;
+    private UserDTO user;
 
 }

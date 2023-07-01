@@ -26,8 +26,8 @@ public class Hold {
     private BookCopy bookCopy;
 
     @ManyToOne
-    @JoinColumn(name = "patron_id")
-    private Patron patron;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate borrowedDate;

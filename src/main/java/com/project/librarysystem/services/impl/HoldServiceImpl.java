@@ -6,11 +6,11 @@ import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.HoldMapper;
 import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.models.Hold;
-import com.project.librarysystem.models.Patron;
+import com.project.librarysystem.models.User;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
 import com.project.librarysystem.repositories.HoldRepository;
-import com.project.librarysystem.repositories.PatronRepository;
+import com.project.librarysystem.repositories.UserRepository;
 import com.project.librarysystem.services.EmailService;
 import com.project.librarysystem.services.HoldService;
 
@@ -30,7 +30,7 @@ public class HoldServiceImpl implements HoldService {
 
     private final HoldRepository repository;
     private final BookCopyRepository bookCopyRepository;
-    private final PatronRepository patronRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
     private final HoldMapper mapper;
 
@@ -46,7 +46,7 @@ public class HoldServiceImpl implements HoldService {
         BookCopy bookCopy = bookCopyRepository.findById(bookCopyId)
             .orElseThrow(() -> new ResourceNotFoundException("Book with" + bookCopyId + " not found"));
 
-        Patron patron = patronRepository.findById(patronId)
+        User user = userRepository.findById(patronId)
             .orElseThrow(() -> new ResourceNotFoundException("Patron with" + patronId + "not found"));
 
         // verify if book is available    
@@ -60,7 +60,7 @@ public class HoldServiceImpl implements HoldService {
         // build, save it to repository and send informational email
         Hold hold = Hold.builder()
                 .bookCopy(bookCopy)
-                .patron(patron)
+                .user(user)
                 .dueDate(LocalDate.now().plusDays(LOAN_DAYS))
                 .build();
 

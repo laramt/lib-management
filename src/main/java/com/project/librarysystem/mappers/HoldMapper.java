@@ -15,25 +15,17 @@ import java.util.stream.Collectors;
 public class HoldMapper {
 
     private final ModelMapper mapper;
-    private final BookCopyMapper bookCopyMapper;
-    private final PatronMapper patronMapper;
 
     public Hold toHold(HoldDTO dto) {
-        Hold hold = mapper.map(dto, Hold.class);
-        hold.setBookCopy(bookCopyMapper.toBookCopy(dto.getBookCopy()));
-        hold.setPatron(patronMapper.toPatron(dto.getPatron()));
-        return hold;
+        return mapper.map(dto, Hold.class);
     }
 
     public HoldDTO toHoldDTO(Hold entity) {
-        HoldDTO hold = mapper.map(entity, HoldDTO.class);
-        hold.setBookCopy(bookCopyMapper.toBookCopyDTO(entity.getBookCopy()));
-        hold.setPatron(patronMapper.toPatronDTO(entity.getPatron()));
-        return hold;
+        return mapper.map(entity, HoldDTO.class);
     }
 
-    public List<HoldDTO> toHoldDTOList(List<Hold> patrons) {
-        return patrons.stream()
+    public List<HoldDTO> toHoldDTOList(List<Hold> list) {
+        return list.stream()
                 .map(this::toHoldDTO)
                 .collect(Collectors.toList());
     }
