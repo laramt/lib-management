@@ -55,8 +55,6 @@ public class UserServiceImpl implements UserService {
         User user = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + id + " not found."));
 
-        validatePatronData(dto.getEmail(), dto.getPhoneNumber(), dto.getBirthDate());
-
         user = mapper.updateUserFromRequest(dto, user);
         repository.save(user);
         return mapper.toUserResponse(user);

@@ -2,12 +2,15 @@ package com.project.librarysystem.services;
 
 import java.util.List;
 
-import com.project.librarysystem.dtos.AuthorDTO;
+import com.project.librarysystem.dtos.request.AuthorRequest;
+import com.project.librarysystem.dtos.response.AuthorResponse;
 
 public interface AuthorService {
 
-    AuthorDTO insert(AuthorDTO dto);
-    List<AuthorDTO> findAll();
-    AuthorDTO findById (Long id);
+    AuthorResponse insert(AuthorRequest request);
+    List<AuthorResponse> findAll();
+    AuthorResponse findById (Long id);
+    AuthorResponse update(Long id, AuthorRequest request);
+    void delete(Long id);
     
 }

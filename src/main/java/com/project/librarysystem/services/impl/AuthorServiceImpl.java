@@ -1,6 +1,7 @@
 package com.project.librarysystem.services.impl;
 
-import com.project.librarysystem.dtos.AuthorDTO;
+import com.project.librarysystem.dtos.request.AuthorRequest;
+import com.project.librarysystem.dtos.response.AuthorResponse;
 import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.AuthorMapper;
@@ -21,27 +22,43 @@ public class AuthorServiceImpl implements AuthorService {
     private final AuthorMapper mapper;
 
     @Override
-    public List<AuthorDTO> findAll() {
+    public List<AuthorResponse> findAll() {
         List<Author> authors = repository.findAll();
-        return mapper.toAuthorDTOList(authors);
+        return mapper.toAuthorResponseList(authors);
     }
 
     @Override
-    public AuthorDTO findById(Long id) {
+    public AuthorResponse findById(Long id) {
         Author author = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Author with id " + id + " not found."));
-        return  mapper.toAuthorDTO(author);
+        return  mapper.toAuthorResponse(author);
     }
 
     @Override
-    public AuthorDTO insert(AuthorDTO dto) {
-        if(dto.getName() == null || dto.getName().isEmpty()){
+    public AuthorResponse insert(AuthorRequest request) {
+        if(request.getName() == null || request.getName().isEmpty()){
             throw new InvalidInputException("Author cannot be null or empty.");
         }
       
-        repository.save(mapper.toAuthor(dto));
-        return dto;
+        Author author = repository.save(mapper.toAuthor(request));
+        return mapper.toAuthorResponse(author);
     }
 
+    @Override
+    public AuthorResponse update(Long id, AuthorRequest request) {
+          Author author = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Author with id " + id + " not found."));
+
+        author = mapper.updateAuthorFromRequest(request, author);
+        repository.save(author);
+        return mapper.toAuthorResponse(author);
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Author with id " + id + " not found."));
+        repository.deleteById(id);
+    }
 
 }

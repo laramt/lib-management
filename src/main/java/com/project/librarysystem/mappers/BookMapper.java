@@ -15,18 +15,15 @@ import java.util.stream.Collectors;
 public class BookMapper {
 
     private final ModelMapper mapper;
-    private final AuthorMapper authorMapper;
 
 
       public Book toBook(BookDTO dto) {
         Book book = mapper.map(dto, Book.class);
-        book.setAuthor(authorMapper.toAuthor(dto.getAuthor()));
         return book;
     }
 
    public BookDTO toBookDTO(Book entity) {
     BookDTO book = mapper.map(entity, BookDTO.class);
-    book.setAuthor(authorMapper.toAuthorDTO(entity.getAuthor()));
     return book;
 }
 
