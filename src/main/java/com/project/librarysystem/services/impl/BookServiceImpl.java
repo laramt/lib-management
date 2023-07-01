@@ -1,6 +1,7 @@
 package com.project.librarysystem.services.impl;
 
-import com.project.librarysystem.dtos.BookDTO;
+import com.project.librarysystem.dtos.request.BookRequest;
+import com.project.librarysystem.dtos.response.BookResponse;
 import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookMapper;
@@ -24,37 +25,37 @@ public class BookServiceImpl implements BookService {
     private final BookMapper mapper;
 
     @Override
-    public List<BookDTO> findAll() {
+    public List<BookResponse> findAll() {
         List<Book> books = repository.findAll();
-        return mapper.toBookDTOList(books);
+        return mapper.toBookResponseList(books);
     }
 
     @Override
-    public BookDTO findById(Long id) {
+    public BookResponse findById(Long id) {
         Book book = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Book with id " + id + " not found."));
-        return  mapper.toBookDTO(book);
+        return  mapper.toBookResponse(book);
     }
 
     @Override
-    public BookDTO insert(BookDTO dto) {
-        Book book = mapper.toBook(dto);
+    public BookResponse insert(BookRequest request) {
 
-        if ( book == null || book.getTitle() == null) {
-            throw new ResourceNotFoundException("Book, title or author cannot be null.");
+        if (request.getTitle() == null || request.getTitle().isEmpty() || request.getTitle().isBlank()) {
+            throw new ResourceNotFoundException("Title filds cannot be null, empty or blank.");
         }
 
-        Author author = authorRepository.findByName(book.getAuthor().getName());
-        if (author == null) {
-        throw new ResourceNotFoundException("Author with not found.");
+        Author author = authorRepository.findById(request.getAuthorId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Author with id " + request.getAuthorId() + " not found."));
+        
+
+       if (repository.existsByTitleAndAuthor(request.getTitle(), author.getId())) {
+            throw new InvalidInputException("Book \"" + request.getTitle() + " - " + author.getName() + "\" already exists.");
         }
 
-       if (repository.existsByTitleAndAuthor(book.getTitle(), author.getId())) {
-            throw new InvalidInputException("Book \"" + book.getTitle() + " - " + author.getName() + "\" already exists.");
-        }
-
-        repository.save(book);
-        return mapper.toBookDTO(book);
+        Book book = new Book();
+        book.setAuthor(author);
+        book = repository.save(mapper.toBook(request));
+        return mapper.toBookResponse(book);
     }
 
 
@@ -66,7 +67,7 @@ public class BookServiceImpl implements BookService {
         throw new ResourceNotFoundException("Author with name \"" + authorName + "\" not found.");
         }
 
-    return repository.findByTitleAndAuthorId(title, author.getId());
+        return repository.findByTitleAndAuthorId(title, author.getId());
     }
 
 }

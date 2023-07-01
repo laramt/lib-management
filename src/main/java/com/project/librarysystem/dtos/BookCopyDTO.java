@@ -1,6 +1,7 @@
 package com.project.librarysystem.dtos;
 
 
+import com.project.librarysystem.dtos.response.BookResponse;
 import com.project.librarysystem.models.enums.BookStatus;
 
 import lombok.Data;
@@ -12,7 +13,7 @@ public class BookCopyDTO {
     private String isbn;
     private int yearPublished;
     private BookStatus status;
-    private BookDTO book;
+    private BookResponse book;
     private PublisherDTO publisher;
 
 }
