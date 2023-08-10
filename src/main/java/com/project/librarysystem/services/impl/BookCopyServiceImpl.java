@@ -1,7 +1,7 @@
 package com.project.librarysystem.services.impl;
 
-import com.project.librarysystem.dtos.BookCopyDTO;
-import com.project.librarysystem.exceptions.InvalidInputException;
+import com.project.librarysystem.dtos.request.BookCopyRequest;
+import com.project.librarysystem.dtos.response.BookCopyResponse;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookCopyMapper;
 import com.project.librarysystem.models.Book;
@@ -9,9 +9,9 @@ import com.project.librarysystem.models.BookCopy;
 import com.project.librarysystem.models.Publisher;
 import com.project.librarysystem.models.enums.BookStatus;
 import com.project.librarysystem.repositories.BookCopyRepository;
+import com.project.librarysystem.repositories.BookRepository;
+import com.project.librarysystem.repositories.PublisherRepository;
 import com.project.librarysystem.services.BookCopyService;
-import com.project.librarysystem.services.BookService;
-import com.project.librarysystem.services.PublisherService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,25 +23,23 @@ import java.util.List;
 public class BookCopyServiceImpl implements BookCopyService {
 
     private final BookCopyRepository repository;
-    private final BookService bookService;
-    private final PublisherService publisherService;
+    private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
     private final BookCopyMapper mapper;
 
     @Override
-    public BookCopyDTO newBookCopy(BookCopyDTO dto) {
-        BookCopy bookCopy = mapper.toBookCopy(dto);
+    public BookCopyResponse newBookCopy(BookCopyRequest request) {
+        
+        BookCopy bookCopy = mapper.toBookCopy(request);
     
-        // check publisher
-        Publisher publisher = publisherService.findByName(bookCopy.getPublisher().getName());
-        if(publisher == null){
-            throw new   InvalidInputException("Publisher with name \"" + bookCopy.getPublisher().getName() + "\" does not exists.");
-        }
+        // verify publisher
+        Publisher publisher = publisherRepository.findById(request.getPublisherId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Publisher with id " + request.getPublisherId() + " not found."));
 
-        // check book
-        Book book = bookService.findByTitleAndAuthor(bookCopy.getBook().getTitle(), bookCopy.getBook().getAuthor().getName());
-        if (book == null) {
-             throw new InvalidInputException("Book \"" + bookCopy.getBook().getTitle() + " - " + bookCopy.getBook().getAuthor().getName() + "\" does not exist.");
-        }
+        // verify book
+        Book book = bookRepository.findById(request.getBookId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Book with id " + request.getBookId() + " not found."));
+
 
         // build and save on repository
         bookCopy = BookCopy.builder()
@@ -53,20 +51,20 @@ public class BookCopyServiceImpl implements BookCopyService {
                     .build();
             
         bookCopy = repository.save(bookCopy);
-        return mapper.toBookCopyDTO(bookCopy);
+        return mapper.toBookCopyResponse(bookCopy);
     }
 
     @Override
-    public List<BookCopyDTO> findAll() {
-        return mapper.toBookCopyDTOList(repository.findAll());
+    public List<BookCopyResponse> findAll() {
+        return mapper.toBookCopyResponseList(repository.findAll());
     }
 
     @Override
-    public BookCopyDTO findById(Long id) {
+    public BookCopyResponse findById(Long id) {
         BookCopy bookCopy = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
 
-        return mapper.toBookCopyDTO(bookCopy);
+        return mapper.toBookCopyResponse(bookCopy);
     }
 
     @Override
@@ -77,18 +75,14 @@ public class BookCopyServiceImpl implements BookCopyService {
     }
 
     @Override
-    public BookCopyDTO update(Long id, BookCopyDTO dto) {
+    public BookCopyResponse update(Long id, BookCopyRequest request) {
         BookCopy bookCopy = repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
 
-        //bookCopy.setBook(dto.getBook());
-        bookCopy.setIsbn(dto.getIsbn());
-        //bookCopy.setPublisher(dto.getPublisher());
-        bookCopy.setYearPublished(dto.getYearPublished());
-        bookCopy.setStatus(dto.getStatus());
+        bookCopy = mapper.updateBookCopyFromRequest(request, bookCopy);
 
         repository.save(bookCopy);
-        return mapper.toBookCopyDTO(bookCopy);
+        return mapper.toBookCopyResponse(bookCopy);
     }
 
 }

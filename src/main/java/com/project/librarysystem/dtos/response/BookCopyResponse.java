@@ -1,13 +1,13 @@
-package com.project.librarysystem.dtos;
+package com.project.librarysystem.dtos.response;
 
 
-import com.project.librarysystem.dtos.response.BookResponse;
+import com.project.librarysystem.dtos.PublisherDTO;
 import com.project.librarysystem.models.enums.BookStatus;
 
 import lombok.Data;
 
 @Data
-public class BookCopyDTO {
+public class BookCopyResponse {
 
     private Long id;
     private String isbn;

@@ -1,40 +1,35 @@
 package com.project.librarysystem.controllers;
 
-import com.project.librarysystem.dtos.BookCopyDTO;
+import com.project.librarysystem.dtos.request.BookCopyRequest;
+import com.project.librarysystem.dtos.response.BookCopyResponse;
 import com.project.librarysystem.services.BookCopyService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/book-copy")
+@RequestMapping("/api/book-copies")
 @RequiredArgsConstructor
 public class BookCopyController {
 
     private final BookCopyService service;
 
-    @PostMapping("/new-book")
-    public ResponseEntity<BookCopyDTO> insert(@RequestBody @Valid BookCopyDTO dto) {
-        dto = service.newBookCopy(dto);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(dto.getId()).toUri();
-        return ResponseEntity.created(uri).body(dto);
+    @PostMapping("/")
+    public ResponseEntity<BookCopyResponse> insert(@RequestBody @Valid BookCopyRequest request) {
+        return ResponseEntity.created(null).body(service.newBookCopy(request));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<BookCopyDTO>> getAll() {
+    @GetMapping("/")
+    public ResponseEntity<List<BookCopyResponse>> getAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookCopyDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<BookCopyResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
@@ -45,9 +40,9 @@ public class BookCopyController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookCopyDTO> update(@PathVariable Long id,
-                                              @RequestBody BookCopyDTO dto) {
-        return ResponseEntity.ok().body(service.update(id, dto));
+    public ResponseEntity<BookCopyResponse> update(@PathVariable Long id,
+                                              @RequestBody BookCopyRequest request) {
+        return ResponseEntity.ok().body(service.update(id, request));
     }
 
 }

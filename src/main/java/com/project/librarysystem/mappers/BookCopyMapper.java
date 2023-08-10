@@ -1,9 +1,12 @@
 package com.project.librarysystem.mappers;
 
-import com.project.librarysystem.dtos.BookCopyDTO;
+import com.project.librarysystem.dtos.request.BookCopyRequest;
+import com.project.librarysystem.dtos.response.BookCopyResponse;
 import com.project.librarysystem.models.BookCopy;
 
 import lombok.RequiredArgsConstructor;
+
+import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -16,20 +19,27 @@ public class BookCopyMapper {
 
     private final ModelMapper mapper;
 
-    public BookCopy toBookCopy(BookCopyDTO dto) {
-    BookCopy bookCopy = mapper.map(dto, BookCopy.class);
-    return bookCopy;
-}
+    public BookCopy toBookCopy(BookCopyRequest request) {
+        mapper.getConfiguration().setAmbiguityIgnored(true);
+        return mapper.map(request, BookCopy.class);
 
-    public BookCopyDTO toBookCopyDTO(BookCopy entity) {
-    BookCopyDTO bookCopy = mapper.map(entity, BookCopyDTO.class);
-    return bookCopy;
     }
 
-    public List<BookCopyDTO> toBookCopyDTOList(List<BookCopy> patrons) {
-        return patrons.stream()
-                .map(this::toBookCopyDTO)
+    public BookCopyResponse toBookCopyResponse(BookCopy entity) {
+        return mapper.map(entity, BookCopyResponse.class);
+
+    }
+
+    public List<BookCopyResponse> toBookCopyResponseList(List<BookCopy> list) {
+        return list.stream()
+                .map(this::toBookCopyResponse)
                 .collect(Collectors.toList());
+    }
+
+        public BookCopy updateBookCopyFromRequest(BookCopyRequest request, BookCopy entity) {
+        mapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+        mapper.map(request, entity);
+        return entity;
     }
 
 

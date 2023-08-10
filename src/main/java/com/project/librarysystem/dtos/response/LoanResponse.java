@@ -3,8 +3,6 @@ package com.project.librarysystem.dtos.response;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.project.librarysystem.dtos.BookCopyDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +20,7 @@ public class LoanResponse {
     private LocalDate dueDate;
     private BigDecimal lateFee;
     private boolean returned;
-    private BookCopyDTO bookCopy;
+    private BookCopyResponse bookCopy;
     private UserResponse user;
 
 }

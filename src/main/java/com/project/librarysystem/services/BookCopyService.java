@@ -2,14 +2,15 @@ package com.project.librarysystem.services;
 
 import java.util.List;
 
-import com.project.librarysystem.dtos.BookCopyDTO;
+import com.project.librarysystem.dtos.request.BookCopyRequest;
+import com.project.librarysystem.dtos.response.BookCopyResponse;
 
 public interface BookCopyService {
 
-    BookCopyDTO newBookCopy(BookCopyDTO bookCopy);
-    List<BookCopyDTO> findAll();
-    BookCopyDTO findById (Long id);
+    BookCopyResponse newBookCopy(BookCopyRequest request);
+    List<BookCopyResponse> findAll();
+    BookCopyResponse findById (Long id);
     void delete (Long id);
-    BookCopyDTO update (Long id, BookCopyDTO bookCopy);
+    BookCopyResponse update (Long id, BookCopyRequest request);
 
 }
