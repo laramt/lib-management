@@ -11,6 +11,6 @@ public interface PublisherService {
     PublisherResponse findById(Long id);
     List<PublisherResponse> findAll();
     PublisherResponse insert(PublisherRequest request);
-    PublisherResponse findByName(String name);
+    List<PublisherResponse> findByName(String name);
 
 }

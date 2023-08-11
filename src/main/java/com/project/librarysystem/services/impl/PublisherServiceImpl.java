@@ -50,9 +50,9 @@ public class PublisherServiceImpl implements PublisherService{
 
 
     @Override
-    public PublisherResponse findByName(String name) { 
-        Publisher publisher = repository.findByName(name);
-        return mapper.toPublisherResponse(publisher);
+    public List<PublisherResponse> findByName(String name) { 
+        List<Publisher> list = repository.findByNameContaining(name);
+        return mapper.toPublisherResponseList(list);
     }
     
 }

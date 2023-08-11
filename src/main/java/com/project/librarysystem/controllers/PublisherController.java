@@ -37,6 +37,9 @@ public class PublisherController {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
-
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<PublisherResponse>> getByName(@PathVariable String name) {
+        return ResponseEntity.ok().body(service.findByName(name));
+    }
   
 }
