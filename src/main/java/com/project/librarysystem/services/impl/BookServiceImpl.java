@@ -59,15 +59,4 @@ public class BookServiceImpl implements BookService {
     }
 
 
-    @Override
-    public Book findByTitleAndAuthor(String title, String authorName) {
-        Author author = authorRepository.findByName(authorName);
-
-        if (author == null) {
-        throw new ResourceNotFoundException("Author with name \"" + authorName + "\" not found.");
-        }
-
-        return repository.findByTitleAndAuthorId(title, author.getId());
-    }
-
 }
