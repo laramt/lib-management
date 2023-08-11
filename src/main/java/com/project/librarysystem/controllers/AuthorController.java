@@ -39,6 +39,11 @@ public class AuthorController {
         return ResponseEntity.ok().body(service.findById(id));
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<AuthorResponse>> getByName(@PathVariable String name) {
+        return ResponseEntity.ok().body(service.findByName(name));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<AuthorResponse> update(@PathVariable("id") Long id,
                                             @RequestBody AuthorRequest request) {

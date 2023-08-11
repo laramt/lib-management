@@ -61,4 +61,10 @@ public class AuthorServiceImpl implements AuthorService {
         repository.deleteById(id);
     }
 
+    @Override
+    public List<AuthorResponse> findByName(String name) {
+        List<Author> list = repository.findByNameContaining(name);
+        return mapper.toAuthorResponseList(list);
+    }
+
 }
