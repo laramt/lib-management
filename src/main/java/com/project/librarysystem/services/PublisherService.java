@@ -3,14 +3,14 @@ package com.project.librarysystem.services;
 
 import java.util.List;
 
-import com.project.librarysystem.dtos.PublisherDTO;
-import com.project.librarysystem.models.Publisher;
+import com.project.librarysystem.dtos.request.PublisherRequest;
+import com.project.librarysystem.dtos.response.PublisherResponse;
 
 public interface PublisherService {
     
-    PublisherDTO findById(Long id);
-    List<PublisherDTO> findAll();
-    PublisherDTO insert(Publisher publisher);
-    Publisher findByName(String name);
+    PublisherResponse findById(Long id);
+    List<PublisherResponse> findAll();
+    PublisherResponse insert(PublisherRequest request);
+    PublisherResponse findByName(String name);
 
 }

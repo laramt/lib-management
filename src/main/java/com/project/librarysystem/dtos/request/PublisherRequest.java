@@ -1,9 +1,9 @@
-package com.project.librarysystem.dtos;
+package com.project.librarysystem.dtos.request;
 
 import lombok.Data;
 
 @Data
-public class PublisherDTO {
+public class PublisherRequest {
   
     private Long id;
     private String name;

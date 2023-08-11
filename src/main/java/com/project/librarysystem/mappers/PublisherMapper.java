@@ -1,6 +1,7 @@
 package com.project.librarysystem.mappers;
 
-import com.project.librarysystem.dtos.PublisherDTO;
+import com.project.librarysystem.dtos.request.PublisherRequest;
+import com.project.librarysystem.dtos.response.PublisherResponse;
 import com.project.librarysystem.models.Publisher;
 
 import lombok.RequiredArgsConstructor;
@@ -16,17 +17,17 @@ public class PublisherMapper {
 
     private final ModelMapper mapper;
 
-    public Publisher toPublisher(PublisherDTO dto) {
+    public Publisher toPublisher(PublisherRequest dto) {
         return mapper.map(dto, Publisher.class);
     }
 
-    public PublisherDTO toPublisherDTO(Publisher entity) {
-        return mapper.map(entity, PublisherDTO.class);
+    public PublisherResponse toPublisherResponse(Publisher entity) {
+        return mapper.map(entity, PublisherResponse.class);
     }
 
-    public List<PublisherDTO> toPublisherDTOList(List<Publisher> list) {
+    public List<PublisherResponse> toPublisherResponseList(List<Publisher> list) {
         return list.stream()
-                .map(this::toPublisherDTO)
+                .map(this::toPublisherResponse)
                 .collect(Collectors.toList());
     }
 

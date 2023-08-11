@@ -1,7 +1,6 @@
 package com.project.librarysystem.dtos.response;
 
 
-import com.project.librarysystem.dtos.PublisherDTO;
 import com.project.librarysystem.models.enums.BookStatus;
 
 import lombok.Data;
@@ -14,6 +13,6 @@ public class BookCopyResponse {
     private int yearPublished;
     private BookStatus status;
     private BookResponse book;
-    private PublisherDTO publisher;
+    private PublisherResponse publisher;
 
 }

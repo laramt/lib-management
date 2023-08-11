@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.project.librarysystem.dtos.PublisherDTO;
+import com.project.librarysystem.dtos.request.PublisherRequest;
+import com.project.librarysystem.dtos.response.PublisherResponse;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.PublisherMapper;
 import com.project.librarysystem.models.Publisher;
@@ -22,33 +23,36 @@ public class PublisherServiceImpl implements PublisherService{
 
 
     @Override
-    public PublisherDTO findById(Long id) {
+    public PublisherResponse findById(Long id) {
         Publisher publisher = repository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("Book with id " + id + " not found."));
 
-        return mapper.toPublisherDTO(publisher);
+        return mapper.toPublisherResponse(publisher);
     }
 
 
     @Override
-    public List<PublisherDTO> findAll() {
-        return mapper.toPublisherDTOList(repository.findAll());
+    public List<PublisherResponse> findAll() {
+        return mapper.toPublisherResponseList(repository.findAll());
     }
 
 
     @Override
-    public PublisherDTO insert(Publisher publisher) {
-        if (publisher == null || publisher.getName() == null) {
+    public PublisherResponse insert(PublisherRequest request) {
+    
+        if (request == null || request.getName() == null) {
             throw new ResourceNotFoundException("Publisher cannot be null.");
         }
-
-         return mapper.toPublisherDTO(repository.save(publisher));
+        Publisher publisher = mapper.toPublisher(request);
+        repository.save(publisher);
+        return mapper.toPublisherResponse(publisher);
     }
 
 
     @Override
-    public Publisher findByName(String name) {
-    return repository.findByName(name);
+    public PublisherResponse findByName(String name) { 
+        Publisher publisher = repository.findByName(name);
+        return mapper.toPublisherResponse(publisher);
     }
     
 }
