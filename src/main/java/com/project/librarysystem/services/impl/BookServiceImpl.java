@@ -2,6 +2,7 @@ package com.project.librarysystem.services.impl;
 
 import com.project.librarysystem.dtos.request.BookRequest;
 import com.project.librarysystem.dtos.response.BookResponse;
+import com.project.librarysystem.exceptions.DataBaseViolationException;
 import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
 import com.project.librarysystem.mappers.BookMapper;
@@ -12,6 +13,8 @@ import com.project.librarysystem.repositories.BookRepository;
 import com.project.librarysystem.services.BookService;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,14 +51,33 @@ public class BookServiceImpl implements BookService {
                         .orElseThrow(() -> new ResourceNotFoundException("Author with id " + request.getAuthorId() + " not found."));
         
 
-       if (repository.existsByTitleAndAuthor(request.getTitle(), author.getId())) {
+       if (repository.existsByTitleAndAuthor(request.getTitle(), request.getAuthorId())) {
             throw new InvalidInputException("Book \"" + request.getTitle() + " - " + author.getName() + "\" already exists.");
         }
 
-        Book book = new Book();
-        book.setAuthor(author);
-        book = repository.save(mapper.toBook(request));
+        Book book = Book.builder().title(request.getTitle())
+                        .author(author).build();
+        book = repository.save(book);
         return mapper.toBookResponse(book);
+    }
+
+    @Override
+    public BookResponse update(BookRequest request, Long id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
+
+    @Override
+    public void delete(Long id) {
+        try {
+        repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Book with id " + id + " not found."));
+        
+        repository.deleteById(id);
+        
+        } catch (DataIntegrityViolationException ex) {
+        throw new DataBaseViolationException("Book with id " + id + " cannot be deleted. ");
+        }
     }
 
 
