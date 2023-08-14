@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.project.librarysystem.exceptions.DataBaseViolationException;
 import com.project.librarysystem.exceptions.InvalidInputException;
 import com.project.librarysystem.exceptions.ResourceNotAvailableException;
 import com.project.librarysystem.exceptions.ResourceNotFoundException;
@@ -43,6 +44,19 @@ public class ResourceExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(err);
+    }
+
+    @ExceptionHandler(DataBaseViolationException.class)
+    public ResponseEntity<StandardError> constraintViolation(DataBaseViolationException e, HttpServletRequest request){
+
+        StandardError error = new StandardError(
+            Instant.now(), 
+            HttpStatus.CONFLICT.value(), 
+            "Data integrity violation.", 
+            e.getMessage(), 
+            request.getRequestURI());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
 }
