@@ -33,7 +33,7 @@ public class LoanController {
         return ResponseEntity.ok().body(service.devolution(id));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<LoanResponse>> getAll() {
         return ResponseEntity.ok().body(service.findAll());
     }

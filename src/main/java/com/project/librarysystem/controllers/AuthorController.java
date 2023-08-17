@@ -29,7 +29,7 @@ public class AuthorController {
         return ResponseEntity.created(null).body(service.insert(request));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<AuthorResponse>> getAll() {
         return ResponseEntity.ok().body(service.findAll());
     }

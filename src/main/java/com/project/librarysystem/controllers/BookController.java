@@ -28,7 +28,7 @@ public class BookController {
         return ResponseEntity.created(null).body(service.insert(request));
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<BookResponse>> getAll() {
         return ResponseEntity.ok().body(service.findAll());
     }

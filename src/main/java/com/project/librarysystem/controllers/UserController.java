@@ -24,7 +24,7 @@ public class UserController {
         return ResponseEntity.created(null).body(response);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/")
     public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.ok().body(service.getAll());
     }
