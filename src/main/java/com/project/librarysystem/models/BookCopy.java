@@ -9,12 +9,11 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "BOOK_COPY_TB")
+@Table(name = "book_copy_tb")
 public class BookCopy {
 
     @Id

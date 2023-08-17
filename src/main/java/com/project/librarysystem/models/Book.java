@@ -9,13 +9,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Builder
-@Table(name = "BOOK_TB")
+@Table(name = "book_tb")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
