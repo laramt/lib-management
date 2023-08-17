@@ -19,10 +19,10 @@ public class LoanController {
     private final LoanService service;
 
     @PostMapping(path = "/borrow")
-    public ResponseEntity<LoanResponse> borrow(@RequestParam(required = true, name = "patronId") Long patronId,
+    public ResponseEntity<LoanResponse> borrow(@RequestParam(required = true, name = "userId") Long userId,
                                          @RequestParam(required = true, name = "bookCopyId") Long bookCopyId) {
 
-        LoanResponse dto = service.borrow(patronId, bookCopyId);
+        LoanResponse dto = service.borrow(userId, bookCopyId);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
         return ResponseEntity.created(uri).body(dto);
