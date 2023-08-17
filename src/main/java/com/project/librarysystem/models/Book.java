@@ -31,7 +31,7 @@ public class Book {
 
     @JsonIgnore
     @OneToMany(mappedBy = "book")
-    private List<BookCopy> copies = new ArrayList<>();
+    private List<BookCopy> copies;
 
     private LocalDateTime createdAt;
 
