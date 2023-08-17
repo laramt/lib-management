@@ -12,6 +12,7 @@ public class BookCopyResponse {
     private String isbn;
     private int yearPublished;
     private BookStatus status;
+    private String language;
     private BookResponse book;
     private PublisherResponse publisher;
 

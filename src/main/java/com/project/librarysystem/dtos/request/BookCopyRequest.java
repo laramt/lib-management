@@ -17,6 +17,7 @@ public class BookCopyRequest {
     private String isbn;
     private int yearPublished;
     private BookStatus status;
+    private String language;
     private Long bookId;
     private Long publisherId;
 

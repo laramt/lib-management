@@ -46,6 +46,7 @@ public class BookCopyServiceImpl implements BookCopyService {
                     .book(book)
                     .publisher(publisher)
                     .isbn(bookCopy.getIsbn())
+                    .language(bookCopy.getLanguage())
                     .status(BookStatus.AVAILABLE)
                     .yearPublished(bookCopy.getYearPublished())
                     .build();

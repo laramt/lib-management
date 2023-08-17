@@ -33,6 +33,8 @@ public class BookCopy {
 
     private int yearPublished;
 
+    private String language;
+
     @Enumerated(EnumType.STRING)
     private BookStatus status;
 
